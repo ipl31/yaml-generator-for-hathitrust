@@ -32,7 +32,7 @@ def writeFile(finalNumber, readingStartNum, fileType, outputFile):
 		determinePrefixLength(pageNum)
 		generateFileName(prefixZeroes, pageNum, fileType)
 		generateOrderLabel(readingStartNum, pageNum, orderNum)
-		output = '\t' + fileName + ': { ' + orderLabel + ' }\n'
+		output = '    ' + fileName + ': { ' + orderLabel + ' }\n'
 		f.write(output)
 		if pageNum >= readingStartNum:
 			orderNum += 1
