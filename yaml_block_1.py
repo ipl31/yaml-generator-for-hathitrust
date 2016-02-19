@@ -1,3 +1,5 @@
+# Goal: Take input of final image number, image filetype, and print list of files.
+
 def determinePrefixLength(fileNum):
 	global prefixZeroes
 	if 0 < fileNum < 10:
