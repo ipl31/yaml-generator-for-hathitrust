@@ -64,29 +64,29 @@ def fromRoman(s):
 def inputToLists():
 	global blankPages, chapterPages, chapterStart, copyrightPages, firstChapterStart, foldoutPages, imagePages, indexStart, referenceStartPages, tableOfContentsStarts, titlePages, halfTitlePages
 	if type(blankPages).__name__ == 'int':
-		blankPages = map(int, str(blankPages))
+		blankPages = [blankPages]
 	if type(chapterPages).__name__ == 'int':
-		chapterPages = map(int, str(chapterPages))
+		chapterPages = [chapterPages]
 	if type(chapterStart).__name__ == 'int':
-		chapterStart = map(int, str(chapterStart))
+		chapterStart = [chapterStart]
 	if type(copyrightPages).__name__ == 'int':
-		copyrightPages = map(int, str(copyrightPages))
+		copyrightPages = [copyrightPages]
 	if type(firstChapterStart).__name__ == 'int':
-		firstChapterStart = map(int, str(firstChapterStart))
+		firstChapterStart = [firstChapterStart]
 	if type(foldoutPages).__name__ == 'int':
-		foldoutPages = map(int, str(foldoutPages))
+		foldoutPages = [foldoutPages]
 	if type(imagePages).__name__ == 'int':
-		imagePages = map(int, str(imagePages))
+		imagePages = [imagePages]
 	if type(indexStart).__name__ == 'int':
-		indexStart = map(int, str(indexStart))
+		indexStart = [indexStart]
 	if type(referenceStartPages).__name__ == 'int':
-		referenceStartPages = map(int, str(referenceStartPages))
+		referenceStartPages = [referenceStartPages]
 	if type(tableOfContentsStarts).__name__ == 'int':
-		tableOfContentsStarts = map(int, str(tableOfContentsStarts))
+		tableOfContentsStarts = [tableOfContentsStarts]
 	if type(titlePages).__name__ == 'int':
-		titlePages = map(int, str(titlePages))
+		titlePages = [titlePages]
 	if type(halfTitlePages).__name__ == 'int':
-		halfTitlePages = map(int, str(halfTitlePages))
+		halfTitlePages = [halfTitlePages]
 
 # Handles the reading labels. Uses list function which then gets split apart, so that multiple labels can apply to same page if relevant.
 def generateLabel(pageNum):
