@@ -1,4 +1,4 @@
-# Goal: To handle labels
+# Goal: To add roman numerals to supported reading order. Use the page 1 boundary as a way to stop calling them.
 
 # Determines the length of the 000s to ensure that the filename is 8 characters.
 def determinePrefixLength(pageNum):
@@ -25,6 +25,35 @@ def generateOrderLabel(readingStartNum, pageNum, orderNum):
 	orderLabel = ''
 	if pageNum >= readingStartNum:
 		orderLabel = 'orderlabel: "' + str(orderNum) + '"'
+
+# Adds conversion support to/from Roman numerals, taken from diveintopython.net examples
+
+romanNumeralMap = (('c',  100),
+				('xc', 90),
+				('l',  50),
+				('xl', 40),
+				('x',  10),
+				('ix', 9),
+				('v',  5),
+				('iv', 4),
+				('i',  1))
+
+def toRoman(n):
+	result = ''
+	for numeral, integer in romanNumeralMap:
+		while n >= integer:
+			result += numeral
+			n -= integer
+	return result
+
+def fromRoman(s):
+	result = 0
+	index = 0
+	for numeral, integer in romanNumeralMap:
+		while s[index:index+len(numeral)] == numeral:
+			result += integer
+			index += len(numeral)
+	return result
 
 # Processes inputs for various page numbers. Casts everything but covers, because there should only be one, into lists if they're not already lists. Could almost definitely be improved.
 def inputToLists():

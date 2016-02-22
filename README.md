@@ -12,7 +12,7 @@ To allow one to input a small amount of information via the command line and gen
 - **Phase 2.** (Completed, 2016-02-19) Print the list of images in proper syntax for the final process. Write list to file.
 - **Phase 3.** (Completed, 2016-02-19) Add reading order input, which should be on what page the first page starts. Using numbers so far.
 - **Phase 4.** Identify one-time page *types*. Develop a way to insert one, then duplicate.
-- **Phase 5.** Come up with ways to handle multiple page *types*. Build on method of inserting.
+- **Phase 5.** Roman numeral pages before reading order. Use test on reading order to stop them too.
 - **Phase 6.** Identify all other information necessary for the file. Come up with a list of necessary information and structure questions to take its input and print it at the top of the file.
 
 ### Not in a phase yet:
