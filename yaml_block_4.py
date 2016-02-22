@@ -30,10 +30,11 @@ def generateOrderLabel(readingStartNum, pageNum, orderNum):
 def generateLabel(pageNum):
 	global label
 	labelList = []
-# Multiple labels can be comma-separated...
-	if pageNum == frontCover:
+# Problem, need to handle when variable is a single item OR in a list.
+# Testing whether or not a page has a label
+	if pageNum in frontCover:
 		labelList.append('"FRONT_COVER"')
-	if pageNum == backCover:
+	if pageNum in backCover:
 		labelList.append('"BACK_COVER"')
 	if pageNum in blankPages:
 		labelList.append('"BLANK"')
