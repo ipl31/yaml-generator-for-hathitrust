@@ -20,9 +20,12 @@ def generateFileName(prefix, suffix, fileType):
 	fileName = prefix + str(suffix) + '.' + fileType
 
 #  Uses the number of the reading start page to determine where the reading order starts/print.
-def generateOrderLabel(readingStartNum, pageNum, orderNum):
+def generateOrderLabel(readingStartNum, pageNum, orderNum, romanCap, romanInt):
 	global orderLabel
 	orderLabel = ''
+	if romanCap != '':
+		if pageNum >= romanInt <= romanCap:
+			orderLabel = 'orderlabel: "' + toRoman(romanInt) + '"'
 	if pageNum >= readingStartNum:
 		orderLabel = 'orderlabel: "' + str(orderNum) + '"'
 
@@ -124,20 +127,24 @@ def generateLabel(pageNum):
 		label = 'label: ' + ', '.join(labelList)
 
 # Combines all functions to write the file.
-def writeFile(finalNumber, readingStartNum, fileType, outputFile):
+def writeFile(finalNumber, readingStartNum, fileType, outputFile, romanCap):
 	f = open(outputFile, 'w')
 	pageNum = 1
 	orderNum = 1
+	if romanCap != '':
+		romanInt = 1
 	while pageNum <= finalNumber:
 		determinePrefixLength(pageNum)
 		generateFileName(prefixZeroes, pageNum, fileType)
-		generateOrderLabel(readingStartNum, pageNum, orderNum)
+		generateOrderLabel(readingStartNum, pageNum, orderNum, romanCap, romanInt)
 		generateLabel(pageNum)
 		comma = ''
 		if orderLabel != '' and label !='':
 			comma = ', '
 		output = '    ' + fileName + ': { ' + orderLabel + comma + label + ' }\n'
 		f.write(output)
+		if romanInt < romanCap:
+			romanInt += 1
 		if pageNum >= readingStartNum:
 			orderNum += 1
 		pageNum += 1
@@ -145,7 +152,7 @@ def writeFile(finalNumber, readingStartNum, fileType, outputFile):
 
 # Putting input into a function vs. having a huge list of inputs at the end.
 def gatherInput():
-	global fileType, finalNumber, readingStartNum, frontCover, outputFile, backCover, blankPages, chapterPages, chapterStart, copyrightPages, firstChapterStart, foldoutPages, imagePages, indexStart, multiworkBoundaries, prefacePages, referenceStartPages, tableOfContentsStarts, titlePages, halfTitlePages
+	global fileType, finalNumber, readingStartNum, frontCover, outputFile, backCover, blankPages, chapterPages, chapterStart, copyrightPages, firstChapterStart, foldoutPages, imagePages, indexStart, multiworkBoundaries, prefacePages, referenceStartPages, tableOfContentsStarts, titlePages, halfTitlePages, romanCap
 	outputFile = raw_input("What file to do you want to write this to? ")
 	fileType = raw_input("What is the (lowercase) filetype? ")
 	finalNumber = input("What is the number of the final image? ")
@@ -167,6 +174,7 @@ def gatherInput():
 	tableOfContentsStarts = input("List file numbers of the first page of any Table of Contents: ")
 	titlePages = input("List file number of any title pages (one per work): ")
 	halfTitlePages = input("List the file numbers of any half title pages (preliminary title pages often before the first title page, little or no information on reverse): ")
+	romanCap = fromRoman(raw_input("If book has Roman numerals, input the final Roman as a Roman numeral, e.g. 'xii': " ))
 
 gatherInput()
-writeFile(finalNumber, readingStartNum, fileType, outputFile)
+writeFile(finalNumber, readingStartNum, fileType, outputFile, romanCap)
