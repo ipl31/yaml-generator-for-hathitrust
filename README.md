@@ -17,4 +17,5 @@ To allow one to input a small amount of information via the command line and gen
 
 ### Not in a phase yet:
 
-- Handle Roman numeral preface page. Multiple input? Has preface pages? Starting page? Can Python print or do I need to add a dictionary?
+- Things to investigate: What about FINAL page numbers? Might need to indicate where those stop too.
+- Need to organize and smooth out inputs. Maybe group them?

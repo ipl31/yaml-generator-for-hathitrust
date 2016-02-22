@@ -1,4 +1,4 @@
-# Goal: To add roman numerals to supported reading order. Use the page 1 boundary as a way to stop calling them.
+# Goal: To add roman numerals to supported reading order. Set up their own boundaries.
 
 # Determines the length of the 000s to ensure that the filename is 8 characters.
 def determinePrefixLength(pageNum):
@@ -26,7 +26,7 @@ def generateOrderLabel(readingStartNum, pageNum, orderNum, romanStart, romanCap,
 	if romanCap != 0:
 		if pageNum >= romanStart and romanInt <= romanCap:
 			orderLabel = 'orderlabel: "' + toRoman(romanInt) + '"'
-		elif romanCap > romanInt:
+		elif romanCap < romanInt:
 			orderLabel = ''
 	if pageNum >= readingStartNum:
 		orderLabel = 'orderlabel: "' + str(orderNum) + '"'
@@ -145,7 +145,7 @@ def writeFile(finalNumber, readingStartNum, fileType, outputFile, romanCap):
 			comma = ', '
 		output = '    ' + fileName + ': { ' + orderLabel + comma + label + ' }\n'
 		f.write(output)
-		if romanInt < romanCap:
+		if pageNum >= romanStart and romanInt < romanCap:
 			romanInt += 1
 		if pageNum >= readingStartNum:
 			orderNum += 1
