@@ -26,15 +26,44 @@ def generateOrderLabel(readingStartNum, pageNum, orderNum):
 	if pageNum >= readingStartNum:
 		orderLabel = 'orderlabel: "' + str(orderNum) + '"'
 
+# Processes inputs for various page numbers. Casts everything but covers into lists if they're not already lists. Could almost definitely be improved.
+def inputToLists():
+	global blankPages, chapterPages, chapterStart, copyrightPages, firstChapterStart, foldoutPages, imagePages, indexStart, referenceStartPages, tableOfContentsStarts, titlePages, halfTitlePages
+	if type(blankPages).__name__ == 'int':
+		blankPages = map(int, str(blankPages))
+	if type(chapterPages).__name__ == 'int':
+		chapterPages = map(int, str(chapterPages))
+	if type(chapterStart).__name__ == 'int':
+		chapterStart = map(int, str(chapterStart))
+	if type(copyrightPages).__name__ == 'int':
+		copyrightPages = map(int, str(copyrightPages))
+	if type(firstChapterStart).__name__ == 'int':
+		firstChapterStart = map(int, str(firstChapterStart))
+	if type(foldoutPages).__name__ == 'int':
+		foldoutPages = map(int, str(foldoutPages))
+	if type(imagePages).__name__ == 'int':
+		imagePages = map(int, str(imagePages))
+	if type(indexStart).__name__ == 'int':
+		indexStart = map(int, str(indexStart))
+	if type(referenceStartPages).__name__ == 'int':
+		referenceStartPages = map(int, str(referenceStartPages))
+	if type(tableOfContentsStarts).__name__ == 'int':
+		tableOfContentsStarts = map(int, str(tableOfContentsStarts))
+	if type(titlePages).__name__ == 'int':
+		titlePages = map(int, str(titlePages))
+	if type(halfTitlePages).__name__ == 'int':
+		halfTitlePages = map(int, str(halfTitlePages))
+
 # Handles the reading labels. Uses list function which then gets split apart, so that multiple labels can apply to same page if relevant.
 def generateLabel(pageNum):
 	global label
+	inputToLists()
 	labelList = []
-# Problem, need to handle when variable is a single item OR in a list.
+# map(int, str(vari)) will cast single variable to list
 # Testing whether or not a page has a label
-	if pageNum in frontCover:
+	if pageNum == frontCover:
 		labelList.append('"FRONT_COVER"')
-	if pageNum in backCover:
+	if pageNum == backCover:
 		labelList.append('"BACK_COVER"')
 	if pageNum in blankPages:
 		labelList.append('"BLANK"')
