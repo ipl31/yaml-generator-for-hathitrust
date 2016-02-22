@@ -20,12 +20,14 @@ def generateFileName(prefix, suffix, fileType):
 	fileName = prefix + str(suffix) + '.' + fileType
 
 #  Uses the number of the reading start page to determine where the reading order starts/print.
-def generateOrderLabel(readingStartNum, pageNum, orderNum, romanCap, romanInt):
+def generateOrderLabel(readingStartNum, pageNum, orderNum, romanStart, romanCap, romanInt):
 	global orderLabel
 	orderLabel = ''
-	if romanCap != '':
-		if pageNum >= romanInt <= romanCap:
+	if romanCap != 0:
+		if pageNum >= romanStart and romanInt <= romanCap:
 			orderLabel = 'orderlabel: "' + toRoman(romanInt) + '"'
+		elif romanCap > romanInt:
+			orderLabel = ''
 	if pageNum >= readingStartNum:
 		orderLabel = 'orderlabel: "' + str(orderNum) + '"'
 
@@ -136,7 +138,7 @@ def writeFile(finalNumber, readingStartNum, fileType, outputFile, romanCap):
 	while pageNum <= finalNumber:
 		determinePrefixLength(pageNum)
 		generateFileName(prefixZeroes, pageNum, fileType)
-		generateOrderLabel(readingStartNum, pageNum, orderNum, romanCap, romanInt)
+		generateOrderLabel(readingStartNum, pageNum, orderNum, romanStart, romanCap, romanInt)
 		generateLabel(pageNum)
 		comma = ''
 		if orderLabel != '' and label !='':
@@ -152,7 +154,7 @@ def writeFile(finalNumber, readingStartNum, fileType, outputFile, romanCap):
 
 # Putting input into a function vs. having a huge list of inputs at the end.
 def gatherInput():
-	global fileType, finalNumber, readingStartNum, frontCover, outputFile, backCover, blankPages, chapterPages, chapterStart, copyrightPages, firstChapterStart, foldoutPages, imagePages, indexStart, multiworkBoundaries, prefacePages, referenceStartPages, tableOfContentsStarts, titlePages, halfTitlePages, romanCap
+	global fileType, finalNumber, readingStartNum, frontCover, outputFile, backCover, blankPages, chapterPages, chapterStart, copyrightPages, firstChapterStart, foldoutPages, imagePages, indexStart, multiworkBoundaries, prefacePages, referenceStartPages, tableOfContentsStarts, titlePages, halfTitlePages, romanStart, romanCap
 	outputFile = raw_input("What file to do you want to write this to? ")
 	fileType = raw_input("What is the (lowercase) filetype? ")
 	finalNumber = input("What is the number of the final image? ")
@@ -174,6 +176,7 @@ def gatherInput():
 	tableOfContentsStarts = input("List file numbers of the first page of any Table of Contents: ")
 	titlePages = input("List file number of any title pages (one per work): ")
 	halfTitlePages = input("List the file numbers of any half title pages (preliminary title pages often before the first title page, little or no information on reverse): ")
+	romanStart = input("List the file number on which any Roman numerals start: ")
 	romanCap = fromRoman(raw_input("If book has Roman numerals, input the final Roman as a Roman numeral, e.g. 'xii': " ))
 
 gatherInput()
