@@ -1,4 +1,18 @@
-# Goal: To add roman numerals to supported reading order. Set up their own boundaries.
+# Goal: Print additional information up front in the file.
+
+# A function that handles all the defaults and input for scanning information:
+def scanningAndScannerInfo():
+#	capture_date: 2013-11-01T12:31:00-05:00
+#	scanner_make: Kirtas
+#	scanner_model: APT 1200
+#	bitonal_resolution_dpi: 500
+#	contone_resolution_dpi: 300
+#	image_compression_date: 2013-11-01T12:15:00-05:00
+#	image_compression_agent: umich
+#	image_compression_tool: ["kdu_compress v7.2.3","ImageMagick 6.7.8"]
+#	scanning_order: left-to-right
+#	reading_order: left-to-right
+
 
 # Determines the length of the 000s to ensure that the filename is 8 characters.
 def determinePrefixLength(pageNum):
@@ -178,8 +192,8 @@ def gatherInput():
 	referenceStartPages = input("List the file number of the first page of any set of references or bibliography: ")
 	multiworkBoundaries = input("List the file number of any multi-work boundaries: ")
 	backCover = input("What is the file number of the back cover? ")
-	
-	
+
+
 
 gatherInput()
 writeFile(finalNumber, readingStartNum, fileType, outputFile, romanCap)
