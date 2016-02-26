@@ -1,14 +1,21 @@
-# Goal: Print additional information up front in the file.
+# Goal: Print additional information up front in the file. First capture and define all info in file, then print.
 
 # A function that handles all the defaults and input for scanning information:
 def scanningAndScannerInfo():
-#	capture_date: 2013-11-01T12:31:00-05:00
+	global captureDate, scannerMake, scannerModel, bitoneRes, contoneRes, scanningOrder, readingOrder
+	if DST.lower() == 'yes' or DST.lower() == 'y':
+		DSTOffset = '6'
+	else:
+		DSTOffset = '5'
+captureDate = scanYearMonthDay + 'T' + scanTime + ':00-0' + DSTOffset + ':00'
+
+
 #	scanner_make: Kirtas
 #	scanner_model: APT 1200
 #	bitonal_resolution_dpi: 500
 #	contone_resolution_dpi: 300
 #	image_compression_date: 2013-11-01T12:15:00-05:00
-#	image_compression_agent: umich
+#	image_compression_agent: [notredame]
 #	image_compression_tool: ["kdu_compress v7.2.3","ImageMagick 6.7.8"]
 #	scanning_order: left-to-right
 #	reading_order: left-to-right
@@ -168,9 +175,13 @@ def writeFile(finalNumber, readingStartNum, fileType, outputFile, romanCap):
 
 # Putting input into a function vs. having a huge list of inputs at the end.
 def gatherInput():
-	global fileType, finalNumber, readingStartNum, frontCover, outputFile, backCover, blankPages, chapterPages, chapterStart, copyrightPages, firstChapterStart, foldoutPages, imagePages, indexStart, multiworkBoundaries, prefacePages, referenceStartPages, tableOfContentsStarts, titlePages, halfTitlePages, romanStart, romanCap
+	global fileType, finalNumber, readingStartNum, frontCover, outputFile, backCover, blankPages, chapterPages, chapterStart, copyrightPages, firstChapterStart, foldoutPages, imagePages, indexStart, multiworkBoundaries, prefacePages, referenceStartPages, tableOfContentsStarts, titlePages, halfTitlePages, romanStart, romanCap, scanYearMonthDay, scanTime, DST
 	print 'INSTRUCTIONS:\n1. When listing multiple numbers, separate with a comma and space, e.g. "1, 34"\n\n2. Some entries such as first chapter should only have multiple entries if multiple works are bound together, such as two journal volumes.\n\n3. When a question doesn\'t apply, ENTER 0. Not entering a number will confuse the program.\n\n4. Do not use quotation marks.\n'
 	outputFile = raw_input("What file to do you want to write this to? ")
+	print 'The following sequence of questions have to do with the scanning itself.\n'
+	scanYearMonthDay = raw_input("What is the date of the scan, formatted as YYYY-MM-DD, e.g. 2015-04-01? ")
+	scanTime = raw_input("What was the time of the scan in 24-hour time, formatted as 09:30 or 15:45? ")
+	DST = raw_input("Was it daylight savings time: Y/N? ")
 	fileType = raw_input("What is the filetype of the images? ")
 	finalNumber = input("What is the total number of image files? ")
 	frontCover = input("What file number is the front cover? ")
