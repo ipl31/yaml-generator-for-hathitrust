@@ -1,7 +1,5 @@
 import re
 
-# Goal: Print additional information up front in the file. First capture and define all info in file, then print.
-
 # A function that handles all the defaults and input for scanning information:
 def scanningAndScannerInfo(f):
 	global captureDate, scannerMake, scannerModel, scannerUser, bitoneRes, contoneRes, scanningOrder, readingOrder, imageCompressionAgent, imageCompressionDate, imageCompressionTool
@@ -102,7 +100,6 @@ def generateOrderLabel(readingStartNum, pageNum, orderNum, romanStart, romanCap,
 		orderLabel = 'orderlabel: "' + str(orderNum) + '"'
 
 # Adds conversion support to/from Roman numerals, taken from diveintopython.net examples
-
 romanNumeralMap = (('c',  100),
 				('xc', 90),
 				('l',  50),
@@ -167,7 +164,6 @@ def generateLabel(pageNum):
 	global label
 	inputToLists()
 	labelList = []
-# map(int, str(vari)) will cast single variable to list
 # Testing whether or not a page has a label
 	if pageNum == frontCover:
 		labelList.append('"FRONT_COVER"')
