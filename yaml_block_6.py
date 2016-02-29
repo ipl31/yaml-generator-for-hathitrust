@@ -20,9 +20,11 @@ def scanningAndScannerInfo(f):
 	else:
 		scannerModel = 'scanner_model: ' + scannerModelInput + '\n'
 	# SETTING THIS MANUALLY BECAUSE IT'S SPECIFIC TO US
-	scannerUser = 'scanner_user: "Notre Dame Hesburgh Libraries: Digial Production Unit"'
-	bitoneRes = 'bitonal_resolution_dpi: ' + bitoneResInput + '\n'
-	contoneRes = 'contone_resolution_dpi: ' + contoneResInput + '\n'
+	scannerUser = 'scanner_user: "Notre Dame Hesburgh Libraries: Digital Production Unit"\n'
+	if bitoneResInput != '0':
+		bitoneRes = 'bitonal_resolution_dpi: ' + bitoneResInput + '\n'
+	if contoneResInput != '0':
+		contoneRes = 'contone_resolution_dpi: ' + contoneResInput + '\n'
 	if imageCompression.lower() == 'yes' or imageCompression.lower() == 'y':
 		# SETTING THIS MANUALLY BECAUSE IT'S SPECIFIC TO US.
 		imageCompressionAgent = 'image_compression_agent: [notredame]\n'
@@ -31,6 +33,16 @@ def scanningAndScannerInfo(f):
 		else:
 			compressionDSTOffset = '5'
 		imageCompressionDate = 'image_compression_date: ' + imageCompressionYearMonthDay + 'T' + imageCompressionTime + ':00-0' + compressionDSTOffset + ':00\n'
+		if "," in imageCompressionToolList:
+		    splitList = imageCompressionToolList.split(", ")
+		    imageCompressionToolList = ''
+		    for tool in splitList:
+		        if tool == splitList[-1]:
+		            imageCompressionToolList += '"' + tool + '"'
+		        else:
+		            imageCompressionToolList += '"' + tool + '", '
+		else:
+		    imageCompressionToolList = '"' + imageCompressionToolList + '"'
 		imageCompressionTool = 'image_compression_tool: [' + imageCompressionToolList + ']\n'
 	if scanningOrderInput.lower() == 'yes' or scanningOrderInput.lower() == 'y':
 		scanningOrder = 'scanning_order: left-to-right\n'
@@ -48,8 +60,10 @@ def scanningAndScannerInfo(f):
 	f.write(scannerMake)
 	f.write(scannerModel)
 	f.write(scannerUser)
-	f.write(bitoneRes)
-	f.write(contoneRes)
+	if bintoneRes:
+		f.write(bitoneRes)
+	if contoneRes:
+		f.write(contoneRes)
 	if imageCompression.lower() == 'yes' or imageCompression.lower() == 'y':
 		f.write(imageCompressionDate)
 		f.write(imageCompressionAgent)
@@ -119,7 +133,7 @@ def fromRoman(s):
 
 # Processes inputs for various page numbers. Casts everything but covers, because there should only be one, into lists if they're not already lists. Could almost definitely be improved.
 def inputToLists():
-	global blankPages, chapterPages, chapterStart, copyrightPages, firstChapterStart, foldoutPages, imagePages, indexStart, referenceStartPages, tableOfContentsStarts, titlePages, halfTitlePages
+	global blankPages, chapterPages, chapterStart, copyrightPages, firstChapterStart, foldoutPages, imagePages, indexStart, multiworkBoundaries, prefacePages, referenceStartPages, tableOfContentsStarts, titlePages, halfTitlePages
 	if type(blankPages).__name__ == 'int':
 		blankPages = [blankPages]
 	if type(chapterPages).__name__ == 'int':
@@ -136,6 +150,8 @@ def inputToLists():
 		imagePages = [imagePages]
 	if type(indexStart).__name__ == 'int':
 		indexStart = [indexStart]
+	if type(multiworkBoundaries).__name__ == 'int':
+		multiworkBoundaries = [multiworkBoundaries]
 	if type(prefacePages).__name__ == 'int':
 		prefacePages = [prefacePages]
 	if type(referenceStartPages).__name__ == 'int':
@@ -174,6 +190,8 @@ def generateLabel(pageNum):
 		labelList.append('"IMAGE_ON_PAGE"')
 	if pageNum in indexStart:
 		labelList.append('"INDEX"')
+	if pageNum in multiworkBoundaries:
+		labelList.append('"MULTIWORK_BOUNDARY"')
 	if pageNum in prefacePages:
 		labelList.append('"PREFACE"')
 	if pageNum in referenceStartPages:
@@ -232,14 +250,14 @@ def gatherInput():
 	DST = raw_input("Was it daylight savings time: Y/N? ")
 	scannerMakeInput = raw_input("If this was scanned on the Kirtas, enter 'YES' or 'Y'. Otherwise enter the name of the scanner make (e.g. Bookeye): ")
 	scannerModelInput = raw_input("If this was scanned on the Kirtas, enter 'YES' or 'Y'. Otherwise enter the name of the scanner model (e.g. 4 V1A): ")
-	bitoneResInput = raw_input("What is the dpi resolution of bitone, b&w, images (input just numbers, e.g. 600)? ")
-	while not re.match('(\d{3}|\d{4})', bitoneResInput):
-		print 'The number you entered was not three or four digits. Please re-input as 300 or 600 or 1000, etc.'
-		bitoneResInput = raw_input("What is the dpi resolution of bitone, b&w, images (input just numbers, e.g. 600)? ")
-	contoneResInput = raw_input("What is the dpi resolution of contone, grayscale or color, images (input just numbers, e.g. 400)? ")
-	while not re.match('(\d{3}|\d{4})', contoneResInput):
-		print 'The number you entered was not three or four digits. Please re-input as 300 or 600 or 1000, etc.'
-		contoneResInput = raw_input("What is the dpi resolution of contone, grayscale or color, images (input just numbers, e.g. 400)? ")
+	bitoneResInput = raw_input("What is the dpi resolution of bitone, b&w, images (input just numbers, e.g. 600)? Or enter '0' if none exist: ")
+	while not re.match('(0|\d{3}|\d{4})', bitoneResInput):
+		print "The number you entered was not three or four digits. Please re-input as 300 or 600 or 1000, etc.  Or enter '0' if none exist:"
+		bitoneResInput = raw_input("What is the dpi resolution of bitone, b&w, images (input just numbers, e.g. 600)? Or enter '0' if none exist: ")
+	contoneResInput = raw_input("What is the dpi resolution of contone, grayscale or color, images (input just numbers, e.g. 400)? Or enter '0' if none exist: ")
+	while not re.match('(0|\d{3}|\d{4})', contoneResInput):
+		print "The number you entered was not three or four digits. Please re-input as 300 or 600 or 1000, etc. Or enter '0' if none exist: "
+		contoneResInput = raw_input("What is the dpi resolution of contone, grayscale or color, images (input just numbers, e.g. 400)? Or enter '0' if none exist: ")
 	imageCompression = raw_input("If any of the images are compressed, enter 'YES' or 'Y': ")
 	if imageCompression.lower() == 'yes' or imageCompression.lower() == 'y':
 		imageCompressionYearMonthDay = raw_input("What is the date of the compression, formatted as YYYY-MM-DD, e.g. 2015-04-01? ")
