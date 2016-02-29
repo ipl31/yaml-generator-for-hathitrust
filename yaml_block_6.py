@@ -4,8 +4,8 @@ import re
 # Handle multiple image compression tools
 
 # A function that handles all the defaults and input for scanning information:
-def scanningAndScannerInfo():
-	global captureDate, scannerMake, scannerModel, bitoneRes, contoneRes, scanningOrder, readingOrder, imageCompressionAgent, imageCompressionDate, imageCompressionTool
+def scanningAndScannerInfo(f):
+	global captureDate, scannerMake, scannerModel, scannerUser, bitoneRes, contoneRes, scanningOrder, readingOrder, imageCompressionAgent, imageCompressionDate, imageCompressionTool
 	if DST.lower() == 'yes' or DST.lower() == 'y':
 		DSTOffset = '6'
 	else:
@@ -19,6 +19,8 @@ def scanningAndScannerInfo():
 		scannerModel = 'scanner_model: APT 1200\n'
 	else:
 		scannerModel = 'scanner_model: ' + scannerModelInput + '\n'
+	# SETTING THIS MANUALLY BECAUSE IT'S SPECIFIC TO US
+	scannerUser = 'scanner_user: "Notre Dame Hesburgh Libraries: Digial Production Unit"'
 	bitoneRes = 'bitonal_resolution_dpi: ' + bitoneResInput + '\n'
 	contoneRes = 'contone_resolution_dpi: ' + contoneResInput + '\n'
 	if imageCompression.lower() == 'yes' or imageCompression.lower() == 'y':
@@ -31,20 +33,21 @@ def scanningAndScannerInfo():
 		imageCompressionDate = 'image_compression_date: ' + imageCompressionYearMonthDay + 'T' + imageCompressionTime + ':00-0' + compressionDSTOffset + ':00\n'
 		imageCompressionTool = 'image_compression_tool: [' + imageCompressionToolList + ']\n'
 	if scanningOrderInput.lower() == 'yes' or scanningOrderInput.lower() == 'y':
-		scanningOrder = 'left-to-right\n'
+		scanningOrder = 'scanning_order: left-to-right\n'
 	elif scanningOrderInput.lower() == 'no' or scanningOrderInput.lower() == 'n':
-		scanningOrder = 'right-to-left\n'
+		scanningOrder = 'scanning_order: right-to-left\n'
 	else:
-		scanningOrder = 'left-to-right\n' #because let's be honest this is the most likely
+		scanningOrder = 'scanning_order: left-to-right\n' #because let's be honest this is the most likely
 	if readingOrderInput.lower() == 'yes' or readingOrderInput.lower() == 'y':
-		readingOrder = 'left-to-right\n'
+		readingOrder = 'reading_order: left-to-right\n'
 	elif readingOrderInput.lower() == 'no' or readingOrderInput.lower() == 'n':
-		readingOrder = 'right-to-left\n'
+		readingOrder = 'reading_order: right-to-left\n'
 	else:
-		readingOrder = 'left-to-right\n' #because let's be honest this is the most likely
+		readingOrder = 'reading_order: left-to-right\n' #because let's be honest this is the most likely
 	f.write(captureDate)
 	f.write(scannerMake)
 	f.write(scannerModel)
+	f.write(scannerUser)
 	f.write(bitoneRes)
 	f.write(contoneRes)
 	if imageCompression.lower() == 'yes' or imageCompression.lower() == 'y':
@@ -133,6 +136,8 @@ def inputToLists():
 		imagePages = [imagePages]
 	if type(indexStart).__name__ == 'int':
 		indexStart = [indexStart]
+	if type(prefacePages).__name__ == 'int':
+		prefacePages = [prefacePages]
 	if type(referenceStartPages).__name__ == 'int':
 		referenceStartPages = [referenceStartPages]
 	if type(tableOfContentsStarts).__name__ == 'int':
@@ -169,6 +174,8 @@ def generateLabel(pageNum):
 		labelList.append('"IMAGE_ON_PAGE"')
 	if pageNum in indexStart:
 		labelList.append('"INDEX"')
+	if pageNum in prefacePages:
+		labelList.append('"PREFACE"')
 	if pageNum in referenceStartPages:
 		labelList.append('"REFERENCES"')
 	if pageNum in tableOfContentsStarts:
@@ -185,7 +192,8 @@ def generateLabel(pageNum):
 # Combines all functions to write the file.
 def writeFile(finalNumber, readingStartNum, fileType, outputFile, romanCap):
 	f = open(outputFile, 'w')
-	scanningAndScannerInfo()
+	scanningAndScannerInfo(f)
+	f.write('pagedata:\n')
 	pageNum = 1
 	orderNum = 1
 	if romanCap != '':
@@ -209,7 +217,7 @@ def writeFile(finalNumber, readingStartNum, fileType, outputFile, romanCap):
 
 # Putting input into a function vs. having a huge list of inputs at the end.
 def gatherInput():
-	global fileType, finalNumber, readingStartNum, frontCover, outputFile, backCover, blankPages, chapterPages, chapterStart, copyrightPages, firstChapterStart, foldoutPages, imagePages, indexStart, multiworkBoundaries, prefacePages, referenceStartPages, tableOfContentsStarts, titlePages, halfTitlePages, romanStart, romanCap, scanYearMonthDay, scanTime, DST, scannerModelInput, scannerMakeInput, compressionDST
+	global fileType, finalNumber, readingStartNum, frontCover, outputFile, backCover, blankPages, chapterPages, chapterStart, copyrightPages, firstChapterStart, foldoutPages, imagePages, indexStart, multiworkBoundaries, prefacePages, referenceStartPages, tableOfContentsStarts, titlePages, halfTitlePages, romanStart, romanCap, scanYearMonthDay, scanTime, DST, scannerModelInput, scannerMakeInput, bitoneResInput, contoneResInput, compressionDST, imageCompression, imageCompressionTime, imageCompressionTool, imageCompressionYearMonthDay, imageCompressionTime, imageCompressionAgent, imageCompressionToolList, scanningOrderInput, readingOrderInput
 	print 'INSTRUCTIONS:\n1. When listing multiple numbers, separate with a comma and space, e.g. "1, 34"\n\n2. Some entries such as first chapter should only have multiple entries if multiple works are bound together, such as two journal volumes.\n\n3. When a question doesn\'t apply, ENTER 0. Not entering a number will confuse the program.\n\n4. Do not use quotation marks.\n'
 	outputFile = raw_input("What file to do you want to write this to? ")
 	print 'The following sequence of questions have to do with the scanning itself.\n'
@@ -244,6 +252,8 @@ def gatherInput():
 		    imageCompressionTime = raw_input("What was the time of the scan in 24-hour time, e.g. 09:30 or 15:45? ")
 		compressionDST = raw_input("Was compression done during daylight savings time: Y/N? ")
 		imageCompressionToolList = raw_input("What tools were used to compress the images. Include versions. Separate with comma and space, e.g. kdu_compress v7.2.3, ImageMagick 6.7.8: ")
+	scanningOrderInput = raw_input("Was the book scanned left-to-right (normal English reading order), Y/N? ")
+	readingOrderInput = raw_input("Is the book READ left-to-right (normal English reading order), Y/N? ")
 	fileType = raw_input("What is the filetype of the images? ")
 	finalNumber = input("What is the total number of image files? ")
 	frontCover = input("What file number is the front cover? ")
