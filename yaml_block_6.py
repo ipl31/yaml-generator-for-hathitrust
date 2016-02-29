@@ -1,25 +1,58 @@
+import re
+
 # Goal: Print additional information up front in the file. First capture and define all info in file, then print.
+# Handle multiple image compression tools
 
 # A function that handles all the defaults and input for scanning information:
 def scanningAndScannerInfo():
-	global captureDate, scannerMake, scannerModel, bitoneRes, contoneRes, scanningOrder, readingOrder
+	global captureDate, scannerMake, scannerModel, bitoneRes, contoneRes, scanningOrder, readingOrder, imageCompressionAgent, imageCompressionDate, imageCompressionTool
 	if DST.lower() == 'yes' or DST.lower() == 'y':
 		DSTOffset = '6'
 	else:
 		DSTOffset = '5'
-captureDate = scanYearMonthDay + 'T' + scanTime + ':00-0' + DSTOffset + ':00'
-
-
-#	scanner_make: Kirtas
-#	scanner_model: APT 1200
-#	bitonal_resolution_dpi: 500
-#	contone_resolution_dpi: 300
-#	image_compression_date: 2013-11-01T12:15:00-05:00
-#	image_compression_agent: [notredame]
-#	image_compression_tool: ["kdu_compress v7.2.3","ImageMagick 6.7.8"]
-#	scanning_order: left-to-right
-#	reading_order: left-to-right
-
+	captureDate = 'capture_date: ' + scanYearMonthDay + 'T' + scanTime + ':00-0' + DSTOffset + ':00\n'
+	if scannerMakeInput.lower() == 'yes' or scannerMakeInput.lower() == 'y':
+		scannerMake = 'scanner_make: Kirtas\n'
+	else:
+		scannerMake = 'scanner_make: ' + scannerMakeInput + '\n'
+	if scannerModelInput.lower() == 'yes' or scannerModelInput.lower() == 'y':
+		scannerModel = 'scanner_model: APT 1200\n'
+	else:
+		scannerModel = 'scanner_model: ' + scannerModelInput + '\n'
+	bitoneRes = 'bitonal_resolution_dpi: ' + bitoneResInput + '\n'
+	contoneRes = 'contone_resolution_dpi: ' + contoneResInput + '\n'
+	if imageCompression.lower() == 'yes' or imageCompression.lower() == 'y':
+		# SETTING THIS MANUALLY BECAUSE IT'S SPECIFIC TO US.
+		imageCompressionAgent = 'image_compression_agent: [notredame]\n'
+		if compressionDST.lower() == 'yes' or compressionDST.lower() == 'y':
+			compressionDSTOffset = '6'
+		else:
+			compressionDSTOffset = '5'
+		imageCompressionDate = 'image_compression_date: ' + imageCompressionYearMonthDay + 'T' + imageCompressionTime + ':00-0' + compressionDSTOffset + ':00\n'
+		imageCompressionTool = 'image_compression_tool: [' + imageCompressionToolList + ']\n'
+	if scanningOrderInput.lower() == 'yes' or scanningOrderInput.lower() == 'y':
+		scanningOrder = 'left-to-right\n'
+	elif scanningOrderInput.lower() == 'no' or scanningOrderInput.lower() == 'n':
+		scanningOrder = 'right-to-left\n'
+	else:
+		scanningOrder = 'left-to-right\n' #because let's be honest this is the most likely
+	if readingOrderInput.lower() == 'yes' or readingOrderInput.lower() == 'y':
+		readingOrder = 'left-to-right\n'
+	elif readingOrderInput.lower() == 'no' or readingOrderInput.lower() == 'n':
+		readingOrder = 'right-to-left\n'
+	else:
+		readingOrder = 'left-to-right\n' #because let's be honest this is the most likely
+	f.write(captureDate)
+	f.write(scannerMake)
+	f.write(scannerModel)
+	f.write(bitoneRes)
+	f.write(contoneRes)
+	if imageCompression.lower() == 'yes' or imageCompression.lower() == 'y':
+		f.write(imageCompressionDate)
+		f.write(imageCompressionAgent)
+		f.write(imageCompressionTool)
+	f.write(scanningOrder)
+	f.write(readingOrder)
 
 # Determines the length of the 000s to ensure that the filename is 8 characters.
 def determinePrefixLength(pageNum):
@@ -152,6 +185,7 @@ def generateLabel(pageNum):
 # Combines all functions to write the file.
 def writeFile(finalNumber, readingStartNum, fileType, outputFile, romanCap):
 	f = open(outputFile, 'w')
+	scanningAndScannerInfo()
 	pageNum = 1
 	orderNum = 1
 	if romanCap != '':
@@ -175,13 +209,41 @@ def writeFile(finalNumber, readingStartNum, fileType, outputFile, romanCap):
 
 # Putting input into a function vs. having a huge list of inputs at the end.
 def gatherInput():
-	global fileType, finalNumber, readingStartNum, frontCover, outputFile, backCover, blankPages, chapterPages, chapterStart, copyrightPages, firstChapterStart, foldoutPages, imagePages, indexStart, multiworkBoundaries, prefacePages, referenceStartPages, tableOfContentsStarts, titlePages, halfTitlePages, romanStart, romanCap, scanYearMonthDay, scanTime, DST
+	global fileType, finalNumber, readingStartNum, frontCover, outputFile, backCover, blankPages, chapterPages, chapterStart, copyrightPages, firstChapterStart, foldoutPages, imagePages, indexStart, multiworkBoundaries, prefacePages, referenceStartPages, tableOfContentsStarts, titlePages, halfTitlePages, romanStart, romanCap, scanYearMonthDay, scanTime, DST, scannerModelInput, scannerMakeInput, compressionDST
 	print 'INSTRUCTIONS:\n1. When listing multiple numbers, separate with a comma and space, e.g. "1, 34"\n\n2. Some entries such as first chapter should only have multiple entries if multiple works are bound together, such as two journal volumes.\n\n3. When a question doesn\'t apply, ENTER 0. Not entering a number will confuse the program.\n\n4. Do not use quotation marks.\n'
 	outputFile = raw_input("What file to do you want to write this to? ")
 	print 'The following sequence of questions have to do with the scanning itself.\n'
 	scanYearMonthDay = raw_input("What is the date of the scan, formatted as YYYY-MM-DD, e.g. 2015-04-01? ")
-	scanTime = raw_input("What was the time of the scan in 24-hour time, formatted as 09:30 or 15:45? ")
+	while not re.match('(19|20|21)\d{2}\-(0[1-9]|1[0-2])\-(0[1-9]|1\d|2\d|3[0-1])', scanYearMonthDay) :
+	    print 'The date was invalid. Please use the YYYY-MM-DD format.'
+	    scanYearMonthDay = raw_input("What is the date of the scan, formatted as YYYY-MM-DD, e.g. 2015-04-01? ")
+	scanTime = raw_input("What was the time of the scan in 24-hour time, e.g. 09:30 or 15:45? ")
+	while not re.match('(0\d|1\d|2[0-4])\:([0-5]\d)', scanTime) :
+	    print 'The time was invalid, please input as 24-hour time, e.g. 07:15 or 20:21.'
+	    scanTime = raw_input("What was the time of the scan in 24-hour time, e.g. 09:30 or 15:45? ")
 	DST = raw_input("Was it daylight savings time: Y/N? ")
+	scannerMakeInput = raw_input("If this was scanned on the Kirtas, enter 'YES' or 'Y'. Otherwise enter the name of the scanner make (e.g. Bookeye): ")
+	scannerModelInput = raw_input("If this was scanned on the Kirtas, enter 'YES' or 'Y'. Otherwise enter the name of the scanner model (e.g. 4 V1A): ")
+	bitoneResInput = raw_input("What is the dpi resolution of bitone, b&w, images (input just numbers, e.g. 600)? ")
+	while not re.match('(\d{3}|\d{4})', bitoneResInput):
+		print 'The number you entered was not three or four digits. Please re-input as 300 or 600 or 1000, etc.'
+		bitoneResInput = raw_input("What is the dpi resolution of bitone, b&w, images (input just numbers, e.g. 600)? ")
+	contoneResInput = raw_input("What is the dpi resolution of contone, grayscale or color, images (input just numbers, e.g. 400)? ")
+	while not re.match('(\d{3}|\d{4})', contoneResInput):
+		print 'The number you entered was not three or four digits. Please re-input as 300 or 600 or 1000, etc.'
+		contoneResInput = raw_input("What is the dpi resolution of contone, grayscale or color, images (input just numbers, e.g. 400)? ")
+	imageCompression = raw_input("If any of the images are compressed, enter 'YES' or 'Y': ")
+	if imageCompression.lower() == 'yes' or imageCompression.lower() == 'y':
+		imageCompressionYearMonthDay = raw_input("What is the date of the compression, formatted as YYYY-MM-DD, e.g. 2015-04-01? ")
+		while not re.match('(19|20|21)\d{2}\-(0[1-9]|1[0-2])\-(0[1-9]|1\d|2\d|3[0-1])', imageCompressionYearMonthDay) :
+		    print 'The date was invalid. Please use the YYYY-MM-DD format.'
+		    imageCompressionYearMonthDay = raw_input("What is the date of the scan, formatted as YYYY-MM-DD, e.g. 2015-04-01? ")
+		imageCompressionTime = raw_input("What was the time of the compression in 24-hour time, e.g. 09:30 or 15:45? ")
+		while not re.match('(0\d|1\d|2[0-4])\:([0-5]\d)', imageCompressionTime) :
+		    print 'The time was invalid, please input as 24-hour time, e.g. 07:15 or 20:21.'
+		    imageCompressionTime = raw_input("What was the time of the scan in 24-hour time, e.g. 09:30 or 15:45? ")
+		compressionDST = raw_input("Was compression done during daylight savings time: Y/N? ")
+		imageCompressionToolList = raw_input("What tools were used to compress the images. Include versions. Separate with comma and space, e.g. kdu_compress v7.2.3, ImageMagick 6.7.8: ")
 	fileType = raw_input("What is the filetype of the images? ")
 	finalNumber = input("What is the total number of image files? ")
 	frontCover = input("What file number is the front cover? ")
