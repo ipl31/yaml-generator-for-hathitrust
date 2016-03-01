@@ -112,7 +112,11 @@ def generateOrderLabel(readingStartNum, readingEndNum, fileNum, orderNum, romanS
 		orderLabel = 'orderlabel: "' + str(orderNum) + '"'
 
 # Adds conversion support to/from Roman numerals, taken from diveintopython.net examples
-romanNumeralMap = (('c',  100),
+romanNumeralMap = (('m',  1000),
+				('cm', 900),
+				('d',  500),
+				('cd', 400),
+				('c',  100),
 				('xc', 90),
 				('l',  50),
 				('xl', 40),
@@ -278,11 +282,11 @@ def gatherInput():
 		    print 'The time was invalid, please input as 24-hour time, e.g. 07:15 or 20:21.'
 		    imageCompressionTime = raw_input("What was the time of the scan in 24-hour time, e.g. 09:30 or 15:45? ")
 		compressionDST = raw_input("Was compression done during daylight savings time: Y/N? ")
-		imageCompressionToolList = raw_input("What tools were used to compress the images. Include versions. Separate with comma and space, e.g. kdu_compress v7.2.3, ImageMagick 6.7.8: ")
+		imageCompressionToolList = raw_input("What tools were used to compress the images? Include versions. Separate with comma and space, e.g. kdu_compress v7.2.3, ImageMagick 6.7.8: ")
 	scanningOrderInput = raw_input("Was the book scanned left-to-right (normal English reading order), Y/N? ")
 	print "This section gathers information about the book's files and reading order."
 	readingOrderInput = raw_input("Is the book READ left-to-right (normal English reading order), Y/N? ")
-	fileType = raw_input("What is the filetype of the images? ")
+	fileType = raw_input("What is the filename extension of the images? ")
 	finalNumber = input("What is the total number of image files? ")
 	frontCover = input("What file number is the front cover? ")
 	halfTitlePages = input("List the file numbers of any half title pages (preliminary title pages often before the first title page, little or no information on reverse): ")
