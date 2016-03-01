@@ -11,13 +11,33 @@ The HathiTrust submissions process requires a .yml file whose contents contain i
 
 ## Using the YAML Generator
 
-
+1. Clone repository to local machine. Python 2.7.x should be installed on the machine.
+2. Read field_guide.md and look over the CSV to understand the kind of data which the program will request.
+3. Use the CSV or a local method to collect the relevant file numbers.
+4. Make any necessary edits to yaml_generator.py (see **Personalizing** below).
+5. If desired, copy yaml_generator.py to the directory where YAML should be generated. The script will output to the directory in which it resides (not tested outputting in other locations).
+6. In the command line, navigate to the directory in which the script resides and run script using: `python yaml_generator.py` (or other local python 2.7.x alias instead of "python", such as "py").
+7. Follow instructions in the script and in field_guide.md to input information.
+8. Check the output YAML file to ensure it looks right and matches your input.
+9. Put in an Issue for any issues you encounter and I'll try to take them on. Additional features that aren't critical fixes or necessary for valid YAML files, however, will be added to possible phases later on. This includes refining multi-work issues.
 
 ### Personalizing the YAML Generator to Your Repository
 
-The YAML generator contains certain pieces of hard-coded information and some assumptions specific to Notre Dame. This section includes line numbers in yaml_generator.py which should be examined and possibly changed.
+The YAML generator contains certain pieces of hard-coded information and some assumptions specific to the institution. This section includes line numbers in yaml_generator.py which should be examined and possibly changed for your institution.
 
-instances of Notre Dame/Kirtas scanner/DST assumptions
+#### Local Scanner Info
+
+Lines 257-258: Queries on each line reference "the Kirtas." Should be updated with name of in-house default scanner or a prompt to enter the Make (257) and Model (258) of the scanner.
+
+Lines 11-19: The tests using variables set in (257-258) to output information about the scanner. Should be redone with new default values or redone entirely to remove tests and take the scanner name entirely as input.
+
+#### Local Department Name
+
+Lines 20-21: Scanner User is hard-coded as the name of the department which handles digitization. It should reflect the name of the department, unit, or other entity responsible for your institution's scanning.
+
+#### Local Compression Agent
+
+Lines 31-32: Image Compression Agent is hard-coded. Change it to your institution's HathiTrust organization code (or that of the institution doing your image compression).
 
 ## Overview of the Project
 
@@ -39,7 +59,6 @@ To allow one to input a small amount of information via the command line and gen
 Things for future work?
 
 - **Priority.** Handling simplified use cases. Work with team to select core elements (things related to pagination, chapters) vs. extraneous elements (foldouts, ?). Write a switch to allow one to just go through the most important/basic elements. (probably easiest then to autofill all other variables with 0.)
-
 - Handling right-to-left READING order with left-to-right scanning order.
 - Handling multiwork issues. First need to get more information from HT on how multiwork issues affect pagination. How do they handle two Page 1s?
 - Do we care about not printing order number on pages which are within the book's pagination (no skip) but aren't actually numbered? I think not. However for reference, the way to handle this would be collecting with skipOrderLabel = input(), casting to list if integer in inputToLists(), and testing "and not in skipOrderLabel" in generateOrderLabel() along with "if readingStartNum <= fileNum <= readingEndNum and fileNum not in unpaginatedPages:"

@@ -14,11 +14,11 @@ Since the problem uses the CLI vs. a GUI, there isn't a lot of space to explain 
 
 - Quotation marks
 - Extra commas
-- Page numbers (except when asked for a page number (specifically when handling Roman numerals)). Always input the FILE number.
+- Page numbers (except when *asked* for a page number, specifically when handling Roman numerals). Always input the FILE number.
 
 ## Output File
 
-- **What file to do you want to write this to?** designates the output file, in the same directory as the Python script. If the file doesn't exist, it will be created. If it exists, this program will **overwrite** it, so exercise caution. It should end in .yml although the script will generate .txt/.xml/etc. but it will be formatted as YAML. Example input: meta.yml
+- **What file to do you want to write this to? (Include extension, e.g. meta.yml)** designates the output file, in the same directory as the Python script. If the file doesn't exist, it will be created. If it exists, this program will **overwrite** it, so exercise caution. It should end in .yml although the script will generate .txt/.xml/etc. but it will be formatted as YAML. Example input: meta.yml
 
 ## Information About Scanning
 
