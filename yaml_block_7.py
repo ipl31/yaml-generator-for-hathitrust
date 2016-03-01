@@ -1,5 +1,13 @@
 import re
 
+# Goal 7: Add number of final page (adds pretty easily). Handle cases where a page number is skipped (for example cases where a group of images in the middle of the book have page numbers and pagination picks up right after).
+
+# Renamed pageNum to fileNum for clarity's sake
+
+# Filenames on which page numbers are skipped.
+# Skip increment
+# Skip print page number
+
 # A function that handles all the defaults and input for scanning information:
 def scanningAndScannerInfo(f):
 	global captureDate, scannerMake, scannerModel, scannerUser, bitoneRes, contoneRes, scanningOrder, readingOrder, imageCompressionAgent, imageCompressionDate, imageCompressionTool, imageCompressionToolList
@@ -73,15 +81,15 @@ def scanningAndScannerInfo(f):
 	f.write(readingOrder)
 
 # Determines the length of the 000s to ensure that the filename is 8 characters.
-def determinePrefixLength(pageNum):
+def determinePrefixLength(fileNum):
 	global prefixZeroes
-	if 0 < pageNum < 10:
+	if 0 < fileNum < 10:
 		prefixZeroes = '0000000'
-	elif 10 <= pageNum < 100:
+	elif 10 <= fileNum < 100:
 		prefixZeroes = '000000'
-	elif 100 <= pageNum < 1000:
+	elif 100 <= fileNum < 1000:
 		prefixZeroes = '00000'
-	elif 1000 <= pageNum < 10000:
+	elif 1000 <= fileNum < 10000:
 		prefixZeroes = '0000'
 	else:
 		prefixZeroes = 'error'
@@ -92,15 +100,15 @@ def generateFileName(prefix, suffix, fileType):
 	fileName = prefix + str(suffix) + '.' + fileType.lower()
 
 #  Uses the number of the reading start page to determine where the reading order starts/print.
-def generateOrderLabel(readingStartNum, readingEndNum, pageNum, orderNum, romanStart, romanCap, romanInt):
+def generateOrderLabel(readingStartNum, readingEndNum, fileNum, orderNum, romanStart, romanCap, romanInt):
 	global orderLabel
 	orderLabel = ''
 	if romanCap != 0:
-		if pageNum >= romanStart and romanInt <= romanCap:
+		if fileNum >= romanStart and romanInt <= romanCap:
 			orderLabel = 'orderlabel: "' + toRoman(romanInt) + '"'
 		elif romanCap < romanInt:
 			orderLabel = ''
-	if  readingStartNum <= pageNum <= readingEndNum:
+	if  readingStartNum <= fileNum <= readingEndNum:
 		orderLabel = 'orderlabel: "' + str(orderNum) + '"'
 
 # Adds conversion support to/from Roman numerals, taken from diveintopython.net examples
@@ -133,7 +141,7 @@ def fromRoman(s):
 
 # Processes inputs for various page numbers. Casts everything but covers, because there should only be one, into lists if they're not already lists. Could almost definitely be improved.
 def inputToLists():
-	global blankPages, chapterPages, chapterStart, copyrightPages, firstChapterStart, foldoutPages, imagePages, indexStart, multiworkBoundaries, prefacePages, referenceStartPages, tableOfContentsStarts, titlePages, halfTitlePages
+	global blankPages, chapterPages, chapterStart, copyrightPages, firstChapterStart, foldoutPages, imagePages, indexStart, multiworkBoundaries, prefacePages, referenceStartPages, tableOfContentsStarts, titlePages, halfTitlePages, unpaginatedPages
 	if type(blankPages).__name__ == 'int':
 		blankPages = [blankPages]
 	if type(chapterPages).__name__ == 'int':
@@ -154,6 +162,8 @@ def inputToLists():
 		multiworkBoundaries = [multiworkBoundaries]
 	if type(prefacePages).__name__ == 'int':
 		prefacePages = [prefacePages]
+	if type(unpaginatedPages).__name__ == 'int':
+		unpaginatedPages = [unpaginatedPages]
 	if type(referenceStartPages).__name__ == 'int':
 		referenceStartPages = [referenceStartPages]
 	if type(tableOfContentsStarts).__name__ == 'int':
@@ -164,42 +174,42 @@ def inputToLists():
 		halfTitlePages = [halfTitlePages]
 
 # Handles the reading labels. Uses list function which then gets split apart, so that multiple labels can apply to same page if relevant.
-def generateLabel(pageNum):
+def generateLabel(fileNum):
 	global label
 	inputToLists()
 	labelList = []
 # Testing whether or not a page has a label
-	if pageNum == frontCover:
+	if fileNum == frontCover:
 		labelList.append('"FRONT_COVER"')
-	if pageNum == backCover:
+	if fileNum == backCover:
 		labelList.append('"BACK_COVER"')
-	if pageNum in blankPages:
+	if fileNum in blankPages:
 		labelList.append('"BLANK"')
-	if pageNum in chapterPages:
+	if fileNum in chapterPages:
 		labelList.append('"CHAPTER_PAGE"')
-	if pageNum in chapterStart:
+	if fileNum in chapterStart:
 		labelList.append('"CHAPTER_START"')
-	if pageNum in copyrightPages:
+	if fileNum in copyrightPages:
 		labelList.append('"COPYRIGHT"')
-	if pageNum in firstChapterStart:
+	if fileNum in firstChapterStart:
 		labelList.append('"FIRST_CONTENT_CHAPTER_START"')
-	if pageNum in foldoutPages:
+	if fileNum in foldoutPages:
 		labelList.append('"FOLDOUT"')
-	if pageNum in imagePages:
+	if fileNum in imagePages:
 		labelList.append('"IMAGE_ON_PAGE"')
-	if pageNum in indexStart:
+	if fileNum in indexStart:
 		labelList.append('"INDEX"')
-	if pageNum in multiworkBoundaries:
+	if fileNum in multiworkBoundaries:
 		labelList.append('"MULTIWORK_BOUNDARY"')
-	if pageNum in prefacePages:
+	if fileNum in prefacePages:
 		labelList.append('"PREFACE"')
-	if pageNum in referenceStartPages:
+	if fileNum in referenceStartPages:
 		labelList.append('"REFERENCES"')
-	if pageNum in tableOfContentsStarts:
+	if fileNum in tableOfContentsStarts:
 		labelList.append('"TABLE_OF_CONTENTS"')
-	if pageNum in titlePages:
+	if fileNum in titlePages:
 		labelList.append('"TITLE"')
-	if pageNum in halfTitlePages:
+	if fileNum in halfTitlePages:
 		labelList.append('"TITLE_PARTS"')
 	if not labelList:
 		label = ''
@@ -211,30 +221,30 @@ def writeFile(finalNumber, readingStartNum, readingEndNum, fileType, outputFile,
 	f = open(outputFile, 'w')
 	scanningAndScannerInfo(f)
 	f.write('pagedata:\n')
-	pageNum = 1
+	fileNum = 1
 	orderNum = 1
 	if romanCap != '':
 		romanInt = 1
-	while pageNum <= finalNumber:
-		determinePrefixLength(pageNum)
-		generateFileName(prefixZeroes, pageNum, fileType)
-		generateOrderLabel(readingStartNum, readingEndNum, pageNum, orderNum, romanStart, romanCap, romanInt)
-		generateLabel(pageNum)
+	while fileNum <= finalNumber:
+		determinePrefixLength(fileNum)
+		generateFileName(prefixZeroes, fileNum, fileType)
+		generateOrderLabel(readingStartNum, readingEndNum, fileNum, orderNum, romanStart, romanCap, romanInt)
+		generateLabel(fileNum)
 		comma = ''
 		if orderLabel != '' and label !='':
 			comma = ', '
 		output = '    ' + fileName + ': { ' + orderLabel + comma + label + ' }\n'
 		f.write(output)
-		if pageNum >= romanStart and romanInt <= romanCap:
+		if fileNum >= romanStart and romanInt <= romanCap:
 			romanInt += 1
-		if readingStartNum <= pageNum <= readingEndNum:
+		if readingStartNum <= fileNum <= readingEndNum:
 			orderNum += 1
-		pageNum += 1
+		fileNum += 1
 	f.close()
 
 # Putting input into a function vs. having a huge list of inputs at the end.
 def gatherInput():
-	global fileType, finalNumber, readingStartNum, readingEndNum, frontCover, outputFile, backCover, blankPages, chapterPages, chapterStart, copyrightPages, firstChapterStart, foldoutPages, imagePages, indexStart, multiworkBoundaries, prefacePages, referenceStartPages, tableOfContentsStarts, titlePages, halfTitlePages, romanStart, romanCap, scanYearMonthDay, scanTime, DST, scannerModelInput, scannerMakeInput, bitoneResInput, contoneResInput, compressionDST, imageCompression, imageCompressionTime, imageCompressionTool, imageCompressionYearMonthDay, imageCompressionTime, imageCompressionAgent, imageCompressionToolList, scanningOrderInput, readingOrderInput
+	global fileType, finalNumber, readingStartNum, readingEndNum, frontCover, outputFile, backCover, blankPages, chapterPages, chapterStart, copyrightPages, firstChapterStart, foldoutPages, imagePages, indexStart, multiworkBoundaries, prefacePages, referenceStartPages, tableOfContentsStarts, titlePages, halfTitlePages, romanStart, romanCap, scanYearMonthDay, scanTime, DST, scannerModelInput, scannerMakeInput, bitoneResInput, contoneResInput, compressionDST, imageCompression, imageCompressionTime, imageCompressionTool, imageCompressionYearMonthDay, imageCompressionTime, imageCompressionAgent, imageCompressionToolList, scanningOrderInput, readingOrderInput, unpaginatedPages
 	print 'INSTRUCTIONS:\n1. When listing multiple numbers, separate with a comma and space, e.g. "1, 34"\n\n2. Some entries such as first chapter should only have multiple entries if multiple works are bound together, such as two journal volumes.\n\n3. When a question doesn\'t apply and isn\'t Y/N, ENTER 0. Not entering anything will confuse the program.\n\n4. Do not use quotation marks.\n'
 	outputFile = raw_input("What file to do you want to write this to? ")
 	print 'The following sequence of questions have to do with the scanning itself.\n'
@@ -288,6 +298,7 @@ def gatherInput():
 	chapterStart = input("List file numbers of the start of each chapter **EXCEPT** the first, including appendices: ")
 	readingEndNum = input("What is the file number on which the final NUMBERED page occurs? ")
 	blankPages = input("List the file numbers of any blank pages: ")
+	unpaginatedPages = input("List the file numbers of any pages outside the pagination sequence (not unpaginated but entirely skipped, such as photographic inserts): ")
 	imagePages = input("List the file number of any page which is only an image: ")
 	foldoutPages = input("List the file number of any page that is a scan of a foldout: ")
 	indexStart = input("List the file number of any pages which are the FIRST page of an index: ")
