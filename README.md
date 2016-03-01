@@ -6,8 +6,11 @@ The HathiTrust submissions process requires a .yml file whose contents contain i
 
 - yaml_generator.py &mdash; Main python script.
 - field_guide.md &mdash; an explanation of the fields and data requested.
-- HathiTrust_Submission_YAML_Data_Spreadsheet.csv &mdash; a CSV document with column headers for each piece of information required by the script. Can be used by student workers or others to record data before it's entered into the YAML generator. Ordering reflects the order in which information is requested by the script.
-- HathiTrust_Submission_Sample.csv &mdash; a copy of the YAML Data Spreadsheet populated with a couple sets of values which can be used as sample information.
+- HathiTrust_Submission_YAML_Data_Spreadsheet.xls &mdash; an XLS document with column headers for each piece of information required by the script. Can be used by student workers or others to record data before it's entered into the YAML generator. Ordering reflects the order in which information is requested by the script. Use field_guide.md to understand what each column represents and what it will output.
+- HathiTrust_Submission_Sample.xls &mdash; a copy of the YAML Data Spreadsheet populated with a couple sets of values which can be used as sample information.
+- sample_meta.yml &mdash; a YAML file generated from the data entered in HathiTrust_Submission_Sample.xls. Example of how the data in each field gets handled.
+
+Originally the spreadsheets were conceived of as CSVs, but when used in Excel or Libre Office, one cannot save column data types for information and things like dates and barcodes were being "parsed" erroneously, leading to bad data. These allow persistent settings.
 
 ## Using the YAML Generator
 
