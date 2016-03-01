@@ -32,13 +32,14 @@ To allow one to input a small amount of information via the command line and gen
 - **Phase 5.** (Completed, 2016-02-22) Roman numeral pages before reading order. Use test on reading order to stop them too.
 - **Phase 6.** (Completed, 2016-02-29) Identify all other information necessary for the file. Come up with a list of necessary information and structure questions to take its input and print it at the top of the file.
 - **Phase 7.** (Completed, 2016-03-01) Add number of final page. Handle cases where a page number is skipped (for example cases where a group of images in the middle of the book have page numbers and pagination picks up right after).
+- **Phase 8.** Documentation and creation of data capture CSVs and sample CSVs.
 
 ### Not in a phase yet
 
 Things for future work?
 
-- **Priority** Handling simplified use cases. Work with team to select core elements (things related to pagination, chapters) vs. extraneous elements (foldouts, ?). Write a switch to allow one to just go through the most important/basic elements. (probably easiest then to autofill all other variables with 0.)
+- **Priority.** Handling simplified use cases. Work with team to select core elements (things related to pagination, chapters) vs. extraneous elements (foldouts, ?). Write a switch to allow one to just go through the most important/basic elements. (probably easiest then to autofill all other variables with 0.)
 
-- Handling right-to-left READING order.
+- Handling right-to-left READING order with left-to-right scanning order.
 - Handling multiwork issues. First need to get more information from HT on how multiwork issues affect pagination. How do they handle two Page 1s?
 - Do we care about not printing order number on pages which are within the book's pagination (no skip) but aren't actually numbered? I think not. However for reference, the way to handle this would be collecting with skipOrderLabel = input(), casting to list if integer in inputToLists(), and testing "and not in skipOrderLabel" in generateOrderLabel() along with "if readingStartNum <= fileNum <= readingEndNum and fileNum not in unpaginatedPages:"
