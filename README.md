@@ -41,7 +41,7 @@ Lines 31-32: Image Compression Agent is hard-coded. Change it to your institutio
 
 ## Overview of the Project
 
-To allow one to input a small amount of information via the command line and generate a complete, or nearly-complete YML file. These files will still require manual review, but the tool should greatly speed up the creation of a great deal of information.
+To allow one to input a small amount of information via the command line and generate a complete, or nearly-complete YML file. These files will still require manual review, but the tool should greatly speed up the creation of a great deal of information. This section provides an overview of the phases into which the project was broken in order to complete the process. Each phase is reflected in a Building Block file. This could have been done by specially-designated commits, but was instead broken into units, though commits were made at the time.
 
 ### Project Phases
 
