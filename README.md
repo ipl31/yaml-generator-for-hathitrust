@@ -55,7 +55,7 @@ To allow one to input a small amount of information via the command line and gen
 - **Phase 5.** (Completed, 2016-02-22) Roman numeral pages before reading order. Use test on reading order to stop them too.
 - **Phase 6.** (Completed, 2016-02-29) Identify all other information necessary for the file. Come up with a list of necessary information and structure questions to take its input and print it at the top of the file.
 - **Phase 7.** (Completed, 2016-03-01) Add number of final page. Handle cases where a page number is skipped (for example cases where a group of images in the middle of the book have page numbers and pagination picks up right after).
-- **Phase 8.** Documentation and creation of data capture CSVs and sample CSVs.
+- **Phase 8.** (Completed, 2016-03-01) Documentation and creation of data capture CSVs and sample CSVs. And sample YAML.
 
 ### Not in a phase yet
 
