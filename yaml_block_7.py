@@ -4,8 +4,8 @@ import re
 
 # Renamed pageNum to fileNum for clarity's sake
 
-# Filenames on which page numbers are skipped.
-# Skip increment
+# Filenames on which page numbers are skipped: gathered as unpaginatedPages.
+# Skip increment. fileNum still increments. orderNum does NOT increment.
 # Skip print page number
 
 # A function that handles all the defaults and input for scanning information:
@@ -108,7 +108,7 @@ def generateOrderLabel(readingStartNum, readingEndNum, fileNum, orderNum, romanS
 			orderLabel = 'orderlabel: "' + toRoman(romanInt) + '"'
 		elif romanCap < romanInt:
 			orderLabel = ''
-	if  readingStartNum <= fileNum <= readingEndNum:
+	if readingStartNum <= fileNum <= readingEndNum and fileNum not in unpaginatedPages:
 		orderLabel = 'orderlabel: "' + str(orderNum) + '"'
 
 # Adds conversion support to/from Roman numerals, taken from diveintopython.net examples
@@ -237,7 +237,7 @@ def writeFile(finalNumber, readingStartNum, readingEndNum, fileType, outputFile,
 		f.write(output)
 		if fileNum >= romanStart and romanInt <= romanCap:
 			romanInt += 1
-		if readingStartNum <= fileNum <= readingEndNum:
+		if readingStartNum <= fileNum <= readingEndNum and fileNum not in unpaginatedPages:
 			orderNum += 1
 		fileNum += 1
 	f.close()
