@@ -1,4 +1,4 @@
-import re
+import re, os
 
 # A function that handles all the defaults and input for scanning information:
 def scanningAndScannerInfo(f):
@@ -214,7 +214,9 @@ def generateLabel(fileNum):
 		label = 'label: ' + ', '.join(labelList)
 
 # Combines all functions to write the file.
-def writeFile(finalNumber, readingStartNum, readingEndNum, fileType, outputFile, romanCap):
+def writeFile(finalNumber, readingStartNum, readingEndNum, fileType, outputFile, romanCap, workingDir):
+	originalDir = os.getcwd()
+	os.chdir(workingDir)
 	f = open(outputFile, 'w')
 	scanningAndScannerInfo(f)
 	f.write('pagedata:\n')
@@ -238,12 +240,15 @@ def writeFile(finalNumber, readingStartNum, readingEndNum, fileType, outputFile,
 			orderNum += 1
 		fileNum += 1
 	f.close()
+	print "File " + outputFile + " created in " + workingDir
+	os.chdir(originalDir)
 
 # Putting input into a function vs. having a huge list of inputs at the end.
 def gatherInput():
-	global fileType, finalNumber, readingStartNum, readingEndNum, frontCover, outputFile, backCover, blankPages, chapterPages, chapterStart, copyrightPages, firstChapterStart, foldoutPages, imagePages, indexStart, multiworkBoundaries, prefacePages, referenceStartPages, tableOfContentsStarts, titlePages, halfTitlePages, romanStart, romanCap, scanYearMonthDay, scanTime, DST, scannerModelInput, scannerMakeInput, bitoneResInput, contoneResInput, compressionDST, imageCompression, imageCompressionTime, imageCompressionTool, imageCompressionYearMonthDay, imageCompressionTime, imageCompressionAgent, imageCompressionToolList, scanningOrderInput, readingOrderInput, unpaginatedPages
+	global fileType, workingDir, finalNumber, readingStartNum, readingEndNum, frontCover, outputFile, backCover, blankPages, chapterPages, chapterStart, copyrightPages, firstChapterStart, foldoutPages, imagePages, indexStart, multiworkBoundaries, prefacePages, referenceStartPages, tableOfContentsStarts, titlePages, halfTitlePages, romanStart, romanCap, scanYearMonthDay, scanTime, DST, scannerModelInput, scannerMakeInput, bitoneResInput, contoneResInput, compressionDST, imageCompression, imageCompressionTime, imageCompressionTool, imageCompressionYearMonthDay, imageCompressionTime, imageCompressionAgent, imageCompressionToolList, scanningOrderInput, readingOrderInput, unpaginatedPages
 	print 'INSTRUCTIONS:\n1. When listing multiple numbers, separate with a comma and space, e.g. "1, 34"\n\n2. Some entries such as first chapter should only have multiple entries if multiple works are bound together, such as two journal volumes.\n\n3. When a question doesn\'t apply and isn\'t Y/N, ENTER 0. Not entering anything will confuse the program.\n\n4. Do not use quotation marks.\n'
-	outputFile = raw_input("What file to do you want to write this to? (Include extension, e.g. meta.yml) ")
+	workingDir = raw_input("Input the directory in which the finished file should be placed: ")
+	outputFile = raw_input("Name of the file to be created or overwritten (Include extension, e.g. meta.yml): ")
 	print 'The following sequence of questions have to do with the scanning itself.\n'
 	scanYearMonthDay = raw_input("What is the date of the scan, formatted as YYYY-MM-DD, e.g. 2015-04-01? ")
 	while not re.match('(19|20|21)\d{2}\-(0[1-9]|1[0-2])\-(0[1-9]|1\d|2\d|3[0-1])', scanYearMonthDay) :
@@ -304,4 +309,4 @@ def gatherInput():
 	backCover = input("What is the file number of the back cover? ")
 
 gatherInput()
-writeFile(finalNumber, readingStartNum, readingEndNum, fileType, outputFile, romanCap)
+writeFile(finalNumber, readingStartNum, readingEndNum, fileType, outputFile, romanCap, workingDir)

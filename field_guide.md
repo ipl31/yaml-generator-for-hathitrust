@@ -18,7 +18,8 @@ Since the problem uses the CLI vs. a GUI, there isn't a lot of space to explain 
 
 ## Output File
 
-- **What file to do you want to write this to? (Include extension, e.g. meta.yml)** designates the output file, in the same directory as the Python script. If the file doesn't exist, it will be created. If it exists, this program will **overwrite** it, so exercise caution. It should end in .yml although the script will generate .txt/.xml/etc. but it will be formatted as YAML. Example input: meta.yml
+- **Input the directory in which the finished file should be placed:** Input the full directory path to wherever the file should be written (or overwritten). Uses python's os function to change directories while working, though for completeness' sake, it changes back to the current one as a part of wrapping up.
+- **Name of the file to be created or overwritten (Include extension, e.g. meta.yml):** designates the output file, in the same directory as the Python script. If the file doesn't exist, it will be created. If it exists, this program will **overwrite** it, so exercise caution. It should end in .yml although the script will generate .txt/.xml/etc. but it will be formatted as YAML. Example input: meta.yml
 
 ## Information About Scanning
 
