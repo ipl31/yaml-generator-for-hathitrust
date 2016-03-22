@@ -22,7 +22,7 @@ def generateFileName(prefix, suffix, fileType):
 	fileName = prefix + str(suffix) + '.' + fileType.lower()
 
 #  Uses the number of the reading start page to determine where the reading order starts/print.
-def generateOrderLabel(readingStartNum, readingEndNum, fileNum, orderNum, romanStart, romanCap, romanInt):
+def generateOrderLabel(readingStartNum, readingEndNum, fileNum, romanStart, romanCap, romanInt):
 	global orderLabel, orderNum
 	orderLabel = ''
 	if romanCap != 0:
@@ -30,12 +30,12 @@ def generateOrderLabel(readingStartNum, readingEndNum, fileNum, orderNum, romanS
 			orderLabel = 'orderlabel: "' + toRoman(romanInt) + '"'
 		elif romanCap < romanInt:
 			orderLabel = ''
-	if readingStartNum <= fileNum <= readingEndNum and fileNum not in unpaginatedPages and multiworkBoundaries = 0:
+	if readingStartNum <= fileNum <= readingEndNum and fileNum not in unpaginatedPages and multiworkBoundaries == 0:
 		orderLabel = 'orderlabel: "' + str(orderNum) + '"'
-    elif readingStartNum <= fileNum <= readingEndNum and fileNum not in unpaginatedPages:
-        if orderNum in readingStartNum:
-            orderNum = 1
-        
+	elif readingStartNum <= fileNum <= readingEndNum and fileNum not in unpaginatedPages:
+		if orderNum in readingStartNum:
+			orderNum = 1
+		orderLabel = 'orderlabel: "' + str(orderNum) + '"'
 
 # Adds conversion support to/from Roman numerals, taken from diveintopython.net examples
 romanNumeralMap = (('m',  1000),
@@ -96,6 +96,10 @@ def inputToLists():
 		unpaginatedPages = [unpaginatedPages]
 	if type(referenceStartPages).__name__ == 'int':
 		referenceStartPages = [referenceStartPages]
+	if type(readingStartNum) == 'int':
+		readingStartNum = [readingStartNum]
+	if type(readingEndNum) == 'int':
+		readingEndNum = [readingEndNum]
 	if type(tableOfContentsStarts).__name__ == 'int':
 		tableOfContentsStarts = [tableOfContentsStarts]
 	if type(titlePages).__name__ == 'int':
@@ -148,6 +152,7 @@ def generateLabel(fileNum):
 
 # Combines all functions to write the file.
 def writeFile(finalNumber, readingStartNum, readingEndNum, fileType, outputFile, romanCap, workingDir):
+	global orderNum
 	originalDir = os.getcwd()
 	os.chdir(workingDir)
 	f = open(outputFile, 'w')
@@ -159,7 +164,7 @@ def writeFile(finalNumber, readingStartNum, readingEndNum, fileType, outputFile,
 	while fileNum <= finalNumber:
 		determinePrefixLength(fileNum)
 		generateFileName(prefixZeroes, fileNum, fileType)
-		generateOrderLabel(readingStartNum, readingEndNum, fileNum, orderNum, romanStart, romanCap, romanInt)
+		generateOrderLabel(readingStartNum, readingEndNum, fileNum, romanStart, romanCap, romanInt)
 		generateLabel(fileNum)
 		comma = ''
 		if orderLabel != '' and label !='':
