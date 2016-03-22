@@ -23,15 +23,19 @@ def generateFileName(prefix, suffix, fileType):
 
 #  Uses the number of the reading start page to determine where the reading order starts/print.
 def generateOrderLabel(readingStartNum, readingEndNum, fileNum, orderNum, romanStart, romanCap, romanInt):
-	global orderLabel
+	global orderLabel, orderNum
 	orderLabel = ''
 	if romanCap != 0:
 		if fileNum >= romanStart and romanInt <= romanCap:
 			orderLabel = 'orderlabel: "' + toRoman(romanInt) + '"'
 		elif romanCap < romanInt:
 			orderLabel = ''
-	if readingStartNum <= fileNum <= readingEndNum and fileNum not in unpaginatedPages:
+	if readingStartNum <= fileNum <= readingEndNum and fileNum not in unpaginatedPages and multiworkBoundaries = 0:
 		orderLabel = 'orderlabel: "' + str(orderNum) + '"'
+    elif readingStartNum <= fileNum <= readingEndNum and fileNum not in unpaginatedPages:
+        if orderNum in readingStartNum:
+            orderNum = 1
+        
 
 # Adds conversion support to/from Roman numerals, taken from diveintopython.net examples
 romanNumeralMap = (('m',  1000),
@@ -174,32 +178,31 @@ def writeFile(finalNumber, readingStartNum, readingEndNum, fileType, outputFile,
 # Putting input into a function vs. having a huge list of inputs at the end.
 def gatherInput():
 	global fileType, workingDir, finalNumber, readingStartNum, readingEndNum, frontCover, outputFile, backCover, blankPages, chapterPages, chapterStart, copyrightPages, firstChapterStart, foldoutPages, imagePages, indexStart, multiworkBoundaries, prefacePages, referenceStartPages, tableOfContentsStarts, titlePages, halfTitlePages, romanStart, romanCap, scanYearMonthDay, scanTime, DST, scannerModelInput, scannerMakeInput, bitoneResInput, contoneResInput, compressionDST, imageCompression, imageCompressionTime, imageCompressionTool, imageCompressionYearMonthDay, imageCompressionTime, imageCompressionAgent, imageCompressionToolList, scanningOrderInput, readingOrderInput, unpaginatedPages
-	print 'INSTRUCTIONS:\n1. When listing multiple numbers, separate with a comma and space, e.g. "1, 34"\n\n2. Some entries such as first chapter should only have multiple entries if multiple works are bound together, such as two journal volumes.\n\n3. When a question doesn\'t apply and isn\'t Y/N, ENTER 0. Not entering anything will confuse the program.\n\n4. Do not use quotation marks.\n'
 	workingDir = "/users/rtillman/documents/projects/hathitrust"
 	outputFile = "meta_test_py.yml"
 	fileType = "tif"
-	finalNumber = "360"
-	frontCover = "1"
-	halfTitlePages = "0"
-	titlePages = "13, 189"
-	copyrightPages = "14, 190"
-	tableOfContentsStarts = "356"
-	romanStart = "0"
-	romanCap = "0"
-	prefacePages = "0"
-	readingStartNum = "13, 189"
-	firstChapterStart = "15, 191"
-	chapterPages = "0"
-	chapterStart = input("List file numbers of the start of each chapter **EXCEPT** the first, including appendices: ")
-	readingEndNum = input("What is the file number on which the final NUMBERED page occurs? ")
-	blankPages = input("List the file numbers of any blank pages: ")
-	unpaginatedPages = input("List the file numbers of any pages outside the pagination sequence (not unpaginated but entirely skipped, such as photographic inserts): ")
-	imagePages = input("List the file number of any page which is only an image: ")
-	foldoutPages = input("List the file number of any page that is a scan of a foldout: ")
-	indexStart = input("List the file number of any pages which are the FIRST page of an index: ")
-	referenceStartPages = input("List the file number of the first page of any set of references or bibliography: ")
-	multiworkBoundaries = input("List the file number of any multi-work boundaries: ")
-	backCover = input("What is the file number of the back cover? ")
+	finalNumber = 360
+	frontCover = 1
+	halfTitlePages = 0
+	titlePages = (13, 189)
+	copyrightPages = (14, 190)
+	tableOfContentsStarts = 356
+	romanStart = 0
+	romanCap = 0
+	prefacePages = 0
+	readingStartNum = (13, 189)
+	firstChapterStart = (15, 191)
+	chapterPages = 0
+	chapterStart = (28, 55, 72, 170, 177, 183, 200, 224, 242, 325, 332, 333, 334, 339, 350)
+	readingEndNum = (188, 351)
+	blankPages = (2, 3, 4, 5, 6, 7, 8, 9, 10, 357, 358, 359)
+	unpaginatedPages = 0
+	imagePages = 0
+	foldoutPages = 0
+	indexStart = 0
+	referenceStartPages = 0
+	multiworkBoundaries = 189
+	backCover = 360
 
 gatherInput()
 writeFile(finalNumber, readingStartNum, readingEndNum, fileType, outputFile, romanCap, workingDir)
