@@ -14,7 +14,7 @@ Since the problem uses the CLI vs. a GUI, there isn't a lot of space to explain 
 
 - Quotation marks
 - Extra commas
-- Page numbers (except when *asked* for a page number, specifically when handling Roman numerals). Always input the FILE number.
+- Page numbers. *Always* input the FILE number.
 
 ## Output File
 
@@ -54,13 +54,17 @@ This section gathers some basic information about the files themselves:
 
 ## Information About Pages and Pagination
 
-This section gathers information about the actual pagination. Besides normal Arabic numerals, YAML generator can handle Roman numeral pagination at either the beginning or the end (or throughout the book, in which case enter 0 for both questions bout non-Roman pagination).
+This section gathers information about the actual pagination. Besides normal Arabic numerals, YAML generator can handle Roman numeral pagination at either the beginning or the end (or throughout the book, in which case enter 0 for both questions about non-Roman pagination).
 
 - **List the file number on which any Roman numerals start:** Input the file number on which page "i" occurs. If the first Roman page is unnumbered, the user should still designate the file which **should** be "i" and manually remove the labels if desired. Outputs `orderlabel: "i"` and starts numbering.
-- **If book has Roman numerals, input the final Roman as a Roman numeral, e.g. 'xii':** One of the few inputs which is NOT a file number. Input **as a Roman numeral**. The script handles conversion and uses it as a cap for pagination. Handles where the final `orderlabel` with a Roman numeral occurs.
+- **List the file number on which any Roman numerals end:** Input the file number on which the final page with a Roman numeral occurs. The script uses it as a cap for pagination. Handles where the final `orderlabel` with a Roman numeral occurs. Roman numerals iterate through this.
 - **What is the file number on which page 1 occurs?** Input the file number of page 1. Outputs `orderlabel: "1"` and starts page numbering.
 - **What is the file number on which the final NUMBERED page occurs?** Input the file number of the final page. Don't worry about listing the page number, the program will handle it. Determines when to stop the incremental loop that generates order labels.
 - **List the file numbers of any pages outside the pagination sequence (not unpaginated but entirely skipped, such as photographic inserts):** List ALL file numbers, comma-separated, which occur outside the pagination. This is **not** for pages which simply don't have visible page numbers. Some pages, even photographic inserts, will skip visible pagination but still occur within the general page sequence (e.g. 4 pages of photographs preceded by 32 and followed by 37). This is for cases where pages within the book occur entirely without pagination, e.g. page 32, 4 pages of pictures, followed by page 33. All file numbers must be input here as a list, not just the first and last of a sequence. In a case such as above, assuming page 32 starts on file 44, the user would input: `45, 46, 47, 48`. The script can handle multiple instances of pagination breaks.
+
+What about multi-work issues?
+
+Multi-work issue pagination is handled by the first 4 questions (everything but pages outside the pagination) and the much later question about multi-work boundaries. If the multi-work boundary question has at least one non-`0` number as an input, it triggers the tests for multiple starting and ending pagination numbers. The program will be confused starting/ending numbers are a list but multi-work boundary is `0` or if there's a non-`0` multi-work boundary with only a single start and end number.
 
 ## Information About Labels
 
@@ -80,5 +84,5 @@ HathiTrust allows one to label a variety of pages. None of these are necessarily
 - **List the file number of any page that is a scan of a foldout:** A list of file numbers of any pages which are scans of foldouts, either mid-book or at the end. As with pages which are only images, these foldouts may be outside the page numbering, but such information must be put into the list of file numbers of pages outside pagination sequence. Outputs `label: "FOLDOUT"`
 - **List the file number of any pages which are the FIRST page of an index:** A list of file numbers of starts of any indexes. As with chapters, only the first page of the index should be labeled. Multiple indexes in a book is fine (e.g. a hymnal, which has title index and line-by-line index or a cookbook with multiple indexes). Outputs `label: "INDEX"`
 - **List the file number of the first page of any set of references or bibliography:** A list of file numbers of starts of any reference sections OR bibliographies. As with chapters, only the first page should be labeled. Outputs `label: "REFERENCES"`
-- **List the file number of any multi-work boundaries:** Currently, labels are the best this program can do at handling multi-work issues. This label indicates the boundary between multiple items bound together (such as two volumes of a journal or serial publication). Outputs `label "MULTIWORK_BOUNDARY"`
+- **List the file number of any multi-work boundaries:** This label indicates the boundary between multiple items bound together (such as two volumes of a journal or serial publication). It is also necessary for pagination of multi-work items. Outputs `label "MULTIWORK_BOUNDARY"`
 - **What is the file number of the back cover?** Only accepts a single number, not a list of numbers. Outputs `label: "BACK_COVER"`
