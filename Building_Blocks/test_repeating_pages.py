@@ -22,20 +22,45 @@ def generateFileName(prefix, suffix, fileType):
 	fileName = prefix + str(suffix) + '.' + fileType.lower()
 
 #  Uses the number of the reading start page to determine where the reading order starts/print.
-def generateOrderLabel(readingStartNum, readingEndNum, fileNum, romanStart, romanCap, romanInt):
-	global orderLabel, orderNum
+def generateOrderLabel(fileNum, romanStart, romanCap, romanInt):
+	global readingStartNum, readingEndNum, orderNum, orderLabel
 	orderLabel = ''
 	if romanCap != 0:
 		if fileNum >= romanStart and romanInt <= romanCap:
 			orderLabel = 'orderlabel: "' + toRoman(romanInt) + '"'
 		elif romanCap < romanInt:
 			orderLabel = ''
-	if readingStartNum <= fileNum <= readingEndNum and fileNum not in unpaginatedPages and multiworkBoundaries == 0:
+	print readingStartNum, fileNum, readingEndNum, unpaginatedPages
+	if readingStartNum <= fileNum <= readingEndNum and fileNum not in unpaginatedPages:
 		orderLabel = 'orderlabel: "' + str(orderNum) + '"'
-	elif readingStartNum <= fileNum <= readingEndNum and fileNum not in unpaginatedPages:
-		if orderNum in readingStartNum:
-			orderNum = 1
-		orderLabel = 'orderlabel: "' + str(orderNum) + '"'
+		orderNum += 1
+
+# Multiwork Version of Order Label Handling
+
+# Lets Rethink This
+# What if we did just readingStartNum & readingEndNum generation using this and globals!
+def defineMultiWorkLists():
+	global readingStartNum, readingEndNum, multiworkStartList, multiworkEndList
+	multiworkStartList = list(readingStartNum)
+	multiworkEndList = list(readingEndNum)
+	readingStartNum = multiworkStartList[0]
+	readingEndNum = multiworkEndList[0]
+	print multiworkStartList, multiworkEndList
+	print readingStartNum, readingEndNum
+
+def defineMultiworkCycle(fileNum):
+	global readingStartNum, readingEndNum, multiworkStartList, multiworkEndList, orderNum
+	if fileNum in multiworkEndList:
+		if fileNum != multiworkEndList[-1]:
+			multiworkStartList.pop(0)
+			readingStartNum = multiworkStartList[0]
+			multiworkEndList.pop(0)
+			readingEndNum = multiworkEndList[0]
+			print fileNum
+			print multiworkStartList, multiworkEndList
+			print readingStartNum, readingEndNum
+	if fileNum == readingStartNum:
+		orderNum = 1
 
 # Adds conversion support to/from Roman numerals, taken from diveintopython.net examples
 romanNumeralMap = (('m',  1000),
@@ -96,10 +121,6 @@ def inputToLists():
 		unpaginatedPages = [unpaginatedPages]
 	if type(referenceStartPages).__name__ == 'int':
 		referenceStartPages = [referenceStartPages]
-	if type(readingStartNum) == 'int':
-		readingStartNum = [readingStartNum]
-	if type(readingEndNum) == 'int':
-		readingEndNum = [readingEndNum]
 	if type(tableOfContentsStarts).__name__ == 'int':
 		tableOfContentsStarts = [tableOfContentsStarts]
 	if type(titlePages).__name__ == 'int':
@@ -152,19 +173,24 @@ def generateLabel(fileNum):
 
 # Combines all functions to write the file.
 def writeFile(finalNumber, readingStartNum, readingEndNum, fileType, outputFile, romanCap, workingDir):
-	global orderNum
+	global orderNum, multiworkEndList
 	originalDir = os.getcwd()
 	os.chdir(workingDir)
 	f = open(outputFile, 'w')
 	f.write('pagedata:\n')
 	fileNum = 1
 	orderNum = 1
+	multiworkEndList = [0]
+	if multiworkBoundaries != 0:
+		defineMultiWorkLists()
 	if romanCap != '':
 		romanInt = 1
 	while fileNum <= finalNumber:
 		determinePrefixLength(fileNum)
 		generateFileName(prefixZeroes, fileNum, fileType)
-		generateOrderLabel(readingStartNum, readingEndNum, fileNum, romanStart, romanCap, romanInt)
+		if multiworkBoundaries != 0:
+			defineMultiworkCycle(fileNum)
+		generateOrderLabel(fileNum, romanStart, romanCap, romanInt)
 		generateLabel(fileNum)
 		comma = ''
 		if orderLabel != '' and label !='':
@@ -173,8 +199,6 @@ def writeFile(finalNumber, readingStartNum, readingEndNum, fileType, outputFile,
 		f.write(output)
 		if fileNum >= romanStart and romanInt <= romanCap:
 			romanInt += 1
-		if readingStartNum <= fileNum <= readingEndNum and fileNum not in unpaginatedPages:
-			orderNum += 1
 		fileNum += 1
 	f.close()
 	print "File " + outputFile + " created in " + workingDir
@@ -195,18 +219,18 @@ def gatherInput():
 	romanStart = 0
 	romanCap = 0
 	prefacePages = 0
-	readingStartNum = (13, 189)
+	readingStartNum = (13, 188)
 	firstChapterStart = (15, 191)
 	chapterPages = 0
 	chapterStart = (28, 55, 72, 170, 177, 183, 200, 224, 242, 325, 332, 333, 334, 339, 350)
-	readingEndNum = (188, 351)
+	readingEndNum = (184, 351)
 	blankPages = (2, 3, 4, 5, 6, 7, 8, 9, 10, 357, 358, 359)
 	unpaginatedPages = 0
 	imagePages = 0
 	foldoutPages = 0
 	indexStart = 0
 	referenceStartPages = 0
-	multiworkBoundaries = 189
+	multiworkBoundaries = 187
 	backCover = 360
 
 gatherInput()
