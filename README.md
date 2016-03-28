@@ -9,6 +9,7 @@ The HathiTrust submissions process requires a .yml file whose contents contain i
 - HathiTrust_Submission_YAML_Data_Spreadsheet.xls &mdash; an XLS document with column headers for each piece of information required by the script. Can be used by student workers or others to record data before it's entered into the YAML generator. Ordering reflects the order in which information is requested by the script. Use field_guide.md to understand what each column represents and what it will output.
 - HathiTrust_Submission_Sample.xls &mdash; a copy of the YAML Data Spreadsheet populated with a couple sets of values which can be used as sample information.
 - sample_meta.yml &mdash; a YAML file generated from the data entered in HathiTrust_Submission_Sample.xls. Example of how the data in each field gets handled.
+- sample_multiwork_meta.yml &mdash; a YAML file generated from data entered in the second line of HathiTrust_Submission_Sample.xls. Example of how multi-work issues get handled.
 
 Originally the spreadsheets were conceived of as CSVs, but when used in Excel or Libre Office, one cannot save column data types for information and things like dates and barcodes were being "parsed" erroneously, leading to bad data. These allow persistent settings.
 
@@ -57,7 +58,7 @@ To allow one to input a small amount of information via the command line and gen
 - **Phase 7.** (Completed, 2016-03-01) Add number of final page. Handle cases where a page number is skipped (for example cases where a group of images in the middle of the book have page numbers and pagination picks up right after).
 - **Phase 8.** (Completed, 2016-03-01) Documentation and creation of data capture CSVs and sample CSVs. And sample YAML.
 - **Phase 9.** (Completed, 2016-03-15) Added support for creating the YAML file in any particular directory so it can be used better. Also adds success message saying where the file has been made.
-- **Phase 10.** (Completed, 2016-03-28) Now handles both regular and roman numerals for multi-work issues.
+- **Phase 10.** (Completed, 2016-03-28) Now handles both regular and roman numerals for multi-work issues. Added sample multi-work YAML.
 
 ### Not in a phase yet
 
