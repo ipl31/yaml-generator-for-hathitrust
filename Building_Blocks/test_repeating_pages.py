@@ -32,16 +32,13 @@ def generateOrderLabel(fileNum):
 	if romanCap != 0:
 		if romanStart <= fileNum <= romanCap:
 			orderLabel = 'orderlabel: "' + toRoman(romanInt) + '"'
+			romanInt += 1
 		elif romanCap < romanInt:
 			orderLabel = ''
-	print fileNum, romanStartList, romanEndList, romanStart, romanCap
 	if readingStartNum <= fileNum <= readingEndNum and fileNum not in unpaginatedPages:
 		orderLabel = 'orderlabel: "' + str(orderNum) + '"'
 		orderNum += 1
 
-# Multiwork Version of Order Label Handling
-
-# Lets Rethink This
 # What if we did just readingStartNum & readingEndNum generation using this and globals!
 def defineMultiWorkLists():
 	global readingStartNum, readingEndNum, multiworkStartList, multiworkEndList, romanStartList, romanEndList, romanStart, romanCap
@@ -57,8 +54,6 @@ def defineMultiWorkLists():
 	if type(romanStart).__name__ != 'int':
 		romanStart = romanStart
 		romanCap = romanCap
-	print romanStartList, romanEndList
-	print romanStart, romanCap
 
 def defineMultiworkCycle(fileNum):
 	global readingStartNum, readingEndNum, multiworkStartList, multiworkEndList, orderNum, romanStartList, romanEndList, romanStart, romanCap, romanInt
@@ -193,11 +188,11 @@ def writeFile(finalNumber, readingStartNum, readingEndNum, fileType, outputFile,
 	f.write('pagedata:\n')
 	fileNum = 1
 	orderNum = 1
+	romanInt = 1
 	multiworkEndList = [0]
 	romanEndList = [0]
 	if multiworkBoundaries != 0:
 		defineMultiWorkLists()
-	romanInt = 1
 	while fileNum <= finalNumber:
 		determinePrefixLength(fileNum)
 		generateFileName(prefixZeroes, fileNum, fileType)
@@ -210,8 +205,6 @@ def writeFile(finalNumber, readingStartNum, readingEndNum, fileType, outputFile,
 			comma = ', '
 		output = '    ' + fileName + ': { ' + orderLabel + comma + label + ' }\n'
 		f.write(output)
-		if romanStart <= fileNum <= romanCap:
-			romanInt += 1
 		fileNum += 1
 	f.close()
 	print "File " + outputFile + " created in " + workingDir
@@ -226,24 +219,24 @@ def gatherInput():
 	finalNumber = 360
 	frontCover = 1
 	halfTitlePages = 0
-	titlePages = (13, 189)
-	copyrightPages = (14, 190)
-	tableOfContentsStarts = 356
-	romanStart = (3, 188)
-	romanCap = (7, 198)
+	titlePages = (13, 163, 290)
+	copyrightPages = (14, 164, 291)
+	tableOfContentsStarts = (356, 166)
+	romanStart = 3
+	romanCap = 9
 	prefacePages = 0
-	readingStartNum = (13, 200)
-	firstChapterStart = (15, 200)
+	readingStartNum = 13
+	firstChapterStart = 15
 	chapterPages = 0
-	chapterStart = (28, 55, 72, 170, 177, 183, 224, 242, 325, 332, 333, 334, 339, 350)
-	readingEndNum = (184, 351)
+	chapterStart = (28, 55, 72, 150, 177, 183, 224, 242, 325, 332, 333, 334, 339, 350)
+	readingEndNum = 351
 	blankPages = (2, 3, 4, 5, 6, 7, 8, 9, 10, 357, 358, 359)
 	unpaginatedPages = 0
 	imagePages = 0
 	foldoutPages = 0
 	indexStart = 0
 	referenceStartPages = 0
-	multiworkBoundaries = 187
+	multiworkBoundaries = 0
 	backCover = 360
 
 gatherInput()

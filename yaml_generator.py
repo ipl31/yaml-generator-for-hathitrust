@@ -92,17 +92,58 @@ def generateFileName(prefix, suffix, fileType):
 	global fileName
 	fileName = prefix + str(suffix) + '.' + fileType.lower()
 
-#  Uses the number of the reading start page to determine where the reading order starts/print.
-def generateOrderLabel(readingStartNum, readingEndNum, fileNum, orderNum, romanStart, romanCap, romanInt):
-	global orderLabel
+# Uses the number of the reading start page to determine where the reading order starts/create orderLabel variable to be returned later.
+# Handles and incrementations for orderNum and romanInt
+def generateOrderLabel(fileNum):
+	global readingStartNum, readingEndNum, orderNum, orderLabel, romanCap, romanInt, romanStart
+	if fileNum == readingStartNum:
+		orderNum = 1
+	if fileNum == romanStart:
+		romanInt = 1
 	orderLabel = ''
 	if romanCap != 0:
-		if fileNum >= romanStart and romanInt <= romanCap:
+		if romanStart <= fileNum <= romanCap:
 			orderLabel = 'orderlabel: "' + toRoman(romanInt) + '"'
+			romanInt += 1
 		elif romanCap < romanInt:
 			orderLabel = ''
 	if readingStartNum <= fileNum <= readingEndNum and fileNum not in unpaginatedPages:
 		orderLabel = 'orderlabel: "' + str(orderNum) + '"'
+		orderNum += 1
+
+# If this is a Multiwork item (note, does not function right if no multiwork boundary input), casts the numbers to start/end lists, then defines start/end numbers. Lots of globals because they'll need to be manipulated more elsewhere.
+def defineMultiWorkLists():
+	global readingStartNum, readingEndNum, multiworkStartList, multiworkEndList, romanStartList, romanEndList, romanStart, romanCap
+	multiworkStartList = list(readingStartNum)
+	multiworkEndList = list(readingEndNum)
+	readingStartNum = multiworkStartList[0]
+	readingEndNum = multiworkEndList[0]
+	if type(romanStart).__name__ != 'int':
+		romanStartList = list(romanStart)
+		romanEndList = list(romanCap)
+		romanStart = romanStartList[0]
+		romanCap = romanEndList[0]
+	if type(romanStart).__name__ != 'int':
+		romanStart = romanStart
+		romanCap = romanCap
+	print romanStartList, romanEndList
+	print romanStart, romanCap
+
+# Handles Start/End lists, pops off the first (0) number in the list, then resets start/end numbers. Again using globals because they'll need to be manipulated elsewhere.
+def defineMultiworkCycle(fileNum):
+	global readingStartNum, readingEndNum, multiworkStartList, multiworkEndList, orderNum, romanStartList, romanEndList, romanStart, romanCap, romanInt
+	if fileNum in multiworkEndList:
+		if fileNum != multiworkEndList[-1]:
+			multiworkStartList.pop(0)
+			readingStartNum = multiworkStartList[0]
+			multiworkEndList.pop(0)
+			readingEndNum = multiworkEndList[0]
+	if fileNum in romanEndList:
+		if fileNum != romanEndList[-1]:
+			romanStartList.pop(0)
+			romanStart = romanStartList[0]
+			romanEndList.pop(0)
+			romanCap = romanEndList[0]
 
 # Adds conversion support to/from Roman numerals, taken from diveintopython.net examples
 romanNumeralMap = (('m',  1000),
@@ -215,6 +256,7 @@ def generateLabel(fileNum):
 
 # Combines all functions to write the file.
 def writeFile(finalNumber, readingStartNum, readingEndNum, fileType, outputFile, romanCap, workingDir):
+	global orderNum, multiworkEndList, romanEndList, romanInt
 	originalDir = os.getcwd()
 	os.chdir(workingDir)
 	f = open(outputFile, 'w')
@@ -222,22 +264,23 @@ def writeFile(finalNumber, readingStartNum, readingEndNum, fileType, outputFile,
 	f.write('pagedata:\n')
 	fileNum = 1
 	orderNum = 1
-	if romanCap != '':
-		romanInt = 1
+	romanInt = 1
+	multiworkEndList = [0]
+	romanEndList = [0]
+	if multiworkBoundaries != 0:
+		defineMultiWorkLists()
 	while fileNum <= finalNumber:
 		determinePrefixLength(fileNum)
 		generateFileName(prefixZeroes, fileNum, fileType)
-		generateOrderLabel(readingStartNum, readingEndNum, fileNum, orderNum, romanStart, romanCap, romanInt)
+		generateOrderLabel(fileNum)
+		if multiworkBoundaries != 0:
+			defineMultiworkCycle(fileNum)
 		generateLabel(fileNum)
 		comma = ''
 		if orderLabel != '' and label !='':
 			comma = ', '
 		output = '    ' + fileName + ': { ' + orderLabel + comma + label + ' }\n'
 		f.write(output)
-		if fileNum >= romanStart and romanInt <= romanCap:
-			romanInt += 1
-		if readingStartNum <= fileNum <= readingEndNum and fileNum not in unpaginatedPages:
-			orderNum += 1
 		fileNum += 1
 	f.close()
 	print "File " + outputFile + " created in " + workingDir
@@ -292,7 +335,7 @@ def gatherInput():
 	copyrightPages = input("List the file number of the title page verso (back of title page containing copyright info) for each work: ")
 	tableOfContentsStarts = input("List file numbers of the first page of any Table of Contents: ")
 	romanStart = input("List the file number on which any Roman numerals start: ")
-	romanCap = fromRoman(raw_input("If book has Roman numerals, input the final Roman as a Roman numeral, e.g. 'xii': " ))
+	romanCap = input("List the file number on which any Roman numerals end: " ))
 	prefacePages = input("List the file number of each Preface, defined as sections that appear between the title page verso/copyright and page 1. Do not list any Prefaces beginning on or after page 1: ")
 	readingStartNum = input("What is the file number on which page 1 occurs? ")
 	firstChapterStart = input("List the file number of the first chapter on a regularly-numbered page (may be Preface) for each work: ")
