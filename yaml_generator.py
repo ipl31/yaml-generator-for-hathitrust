@@ -126,8 +126,6 @@ def defineMultiWorkLists():
 	if type(romanStart).__name__ != 'int':
 		romanStart = romanStart
 		romanCap = romanCap
-	print romanStartList, romanEndList
-	print romanStart, romanCap
 
 # Handles Start/End lists, pops off the first (0) number in the list, then resets start/end numbers. Again using globals because they'll need to be manipulated elsewhere.
 def defineMultiworkCycle(fileNum):
@@ -335,7 +333,7 @@ def gatherInput():
 	copyrightPages = input("List the file number of the title page verso (back of title page containing copyright info) for each work: ")
 	tableOfContentsStarts = input("List file numbers of the first page of any Table of Contents: ")
 	romanStart = input("List the file number on which any Roman numerals start: ")
-	romanCap = input("List the file number on which any Roman numerals end: " ))
+	romanCap = input("List the file number on which any Roman numerals end: " )
 	prefacePages = input("List the file number of each Preface, defined as sections that appear between the title page verso/copyright and page 1. Do not list any Prefaces beginning on or after page 1: ")
 	readingStartNum = input("What is the file number on which page 1 occurs? ")
 	firstChapterStart = input("List the file number of the first chapter on a regularly-numbered page (may be Preface) for each work: ")
