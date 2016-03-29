@@ -212,7 +212,6 @@ def inputToLists():
 # Handles the reading labels. Uses list function which then gets split apart, so that multiple labels can apply to same page if relevant.
 def generateLabel(fileNum):
 	global label
-	inputToLists()
 	labelList = []
 # Testing whether or not a page has a label
 	if fileNum == frontCover:
@@ -267,6 +266,7 @@ def writeFile(finalNumber, readingStartNum, readingEndNum, fileType, outputFile,
 	romanEndList = [0]
 	if multiworkBoundaries != 0:
 		defineMultiWorkLists()
+	inputToLists()
 	while fileNum <= finalNumber:
 		determinePrefixLength(fileNum)
 		generateFileName(prefixZeroes, fileNum, fileType)

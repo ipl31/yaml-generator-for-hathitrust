@@ -59,6 +59,7 @@ To allow one to input a small amount of information via the command line and gen
 - **Phase 8.** (Completed, 2016-03-01) Documentation and creation of data capture CSVs and sample CSVs. And sample YAML.
 - **Phase 9.** (Completed, 2016-03-15) Added support for creating the YAML file in any particular directory so it can be used better. Also adds success message saying where the file has been made.
 - **Phase 10.** (Completed, 2016-03-28) Now handles both regular and roman numerals for multi-work issues. Added sample multi-work YAML.
+- **Phase 11.** (Completed, 2016-03-29) Discovered bug in which ingests aren't cast to lists until after page 1, which is a problem because front/back cover are always INT but if there's a Page 1 or Page 1, it doesn't work. Moved inputToLists to writeFile itself. Found proper place to put it to avoid any other tests that might be interrupted.
 
 ### Not in a phase yet
 
