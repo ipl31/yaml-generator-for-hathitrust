@@ -19,11 +19,10 @@ Originally the spreadsheets were conceived of as CSVs, but when used in Excel or
 2. Read field_guide.md and look over the CSV to understand the kind of data which the program will request.
 3. Use the CSV or a local method to collect the relevant file numbers.
 4. Make any necessary edits to yaml_generator.py (see **Personalizing** below).
-5. If desired, copy yaml_generator.py to the directory where YAML should be generated. The script will output to the directory in which it resides (not tested outputting in other locations).
-6. In the command line, navigate to the directory in which the script resides and run script using: `python yaml_generator.py` (or other local python 2.7.x alias instead of "python", such as "py").
-7. Follow instructions in the script and in field_guide.md to input information.
-8. Check the output YAML file to ensure it looks right and matches your input.
-9. Put in an Issue for any issues you encounter and I'll try to take them on. Additional features that aren't critical fixes or necessary for valid YAML files, however, will be added to possible phases later on. This includes refining multi-work issues.
+5. In the command line, navigate to the directory in which the script resides and run script using: `python yaml_generator.py` (or other local python 2.7.x alias instead of "python", such as "py").
+6. Follow instructions in the script and in field_guide.md to input information.
+7. Check the output YAML file to ensure it looks right and matches your input.
+8. Put in an Issue for any issues you encounter and I'll try to take them on. Additional features that aren't critical fixes or necessary for valid YAML files, however, will be added to possible phases later on. This includes refining multi-work issues.
 
 ### Personalizing the YAML Generator to Your Repository
 
@@ -31,7 +30,7 @@ The YAML generator contains certain pieces of hard-coded information and some as
 
 #### Local Scanner Info
 
-Lines 257-258: Queries on each line reference "the Kirtas." Should be updated with name of in-house default scanner or a prompt to enter the Make (257) and Model (258) of the scanner.
+Lines 303-304: Queries on each line reference "the Kirtas." Should be updated with name of in-house default scanner or a prompt to enter the Make (257) and Model (258) of the scanner.
 
 Lines 11-19: The tests using variables set in (257-258) to output information about the scanner. Should be redone with new default values or redone entirely to remove tests and take the scanner name entirely as input.
 
