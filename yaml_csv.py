@@ -296,135 +296,135 @@ def gatherInput():
 		if row[0] == '':
 			outputFile = 'no_barcode'
 		else:
-			outputFile = row[0]
+		    outputFile = str(row[0])
 		if row[1] == '':
 		    scanYearMonthDay = "0"
 		else:
-		    scanYearMonthDay = row[1]
+		    scanYearMonthDay = str(row[1])
 		if row[2] == '':
 		    scanTime = "0"
 		else:
-		    scanTime = row[2]
+		    scanTime = str(row[2])
 		if row[3] == '':
 		    DST = "0"
 		else:
-		    DST = row[3]
+		    DST = str(row[3])
 		if row[6] == '':
 		    bitoneResInput = "0"
 		else:
-		    bitoneResInput = row[6]
+		    bitoneResInput = str(row[6])
 		if row[7] == '':
 		    contoneResInput = "0"
 		else:
-		    contoneResInput = row[7]
+		    contoneResInput = str(row[7])
 		if row[12] == '':
 		    scanningOrderInput = 'Y'
 		else:
-		    scanningOrderInput = row[12]
+		    scanningOrderInput = str(row[12])
 		if row[13] == '':
 		    readingOrderInput = 'Y'
 		else:
-		    readingOrderInput = row[13]
+		    readingOrderInput = str(row[13])
 		if row[15] == '':
 		    finalNumber = "0"
 		else:
-		    finalNumber = row[15]
+		    finalNumber = str(row[15])
 		if row[16] == '':
 		    frontCover = "0"
 		else:
-		    frontCover = row[16]
+		    frontCover = str(row[16])
 		if row[17] == '':
 		    halfTitlePages = "0"
 		else:
-		    halfTitlePages = row[17]
+		    halfTitlePages = str(row[17])
 		if row[18] == '':
 		    titlePages = "0"
 		else:
-		    titlePages = row[18]
+		    titlePages = str(row[18])
 		if row[19] == '':
 		    copyrightPages = "0"
 		else:
-		    copyrightPages = row[19]
+		    copyrightPages = str(row[19])
 		if row[20] == '':
 		    tableOfContentsStarts = "0"
 		else:
-		    tableOfContentsStarts = row[20]
+		    tableOfContentsStarts = str(row[20])
 		if row[21] == '':
 		    romanStart = "0"
 		else:
-		    romanStart = row[21]
+		    romanStart = str(row[21])
 		if row[22] == '':
 		    romanCap = "0"
 		else:
-		    romanCap = row[22]
+		    romanCap = str(row[22])
 		if row[23] == '':
 		    prefacePages = "0"
 		else:
-		    prefacePages = row[23]
+		    prefacePages = str(row[23])
 		if row[24] == '':
 		    readingStartNum = "0"
 		else:
-		    readingStartNum = row[24]
+		    readingStartNum = str(row[24])
 		if row[25] == '':
 		    firstChapterStart = "0"
 		else:
-		    firstChapterStart = row[25]
+		    firstChapterStart = str(row[25])
 		if row[26] == '':
 		    chapterPages = "0"
 		else:
-		    chapterPages = row[26]
+		    chapterPages = str(row[26])
 		if row[27] == '':
 		    chapterStart = "0"
 		else:
-		    chapterStart = row[27]
+		    chapterStart = str(row[27])
 		if row[28] == '':
 		    readingEndNum = "0"
 		else:
-		    readingEndNum = row[28]
+		    readingEndNum = str(row[28])
 		if row[29] == '':
 		    blankPages = "0"
 		else:
-		    blankPages = row[29]
+		    blankPages = str(row[29])
 		if row[30] == '':
 		    unpaginatedPages = "0"
 		else:
-		    unpaginatedPages = row[30]
+		    unpaginatedPages = str(row[30])
 		if row[31] == '':
 		    imagePages = "0"
 		else:
-		    imagePages = row[31]
+		    imagePages = str(row[31])
 		if row[32] == '':
 		    foldoutPages = "0"
 		else:
-		    foldoutPages = row[32]
+		    foldoutPages = str(row[32])
 		if row[33] == '':
 		    indexStart = "0"
 		else:
-		    indexStart = row[33]
+		    indexStart = str(row[33])
 		if row[34] == '':
 		    referenceStartPages = "0"
 		else:
-		    referenceStartPages = row[34]
+		    referenceStartPages = str(row[34])
 		if row[35] == '':
 		    multiworkBoundaries = "0"
 		else:
-		    multiworkBoundaries = row[35]
+		    multiworkBoundaries = str(row[35])
 		if row[36] == '':
 		    backCover = "0"
 		else:
-		    backCover = row[36]
+		    backCover = str(row[36])
 		if row[14] == '':
 		    fileType = 'tif'
 		else:
-		    fileType = row[14]
+		    fileType = str(row[14])
 		if row[4] == '':
 		    scannerMakeInput = 'y'
 		else:
-		    scannerMakeInput = row[4]
+		    scannerMakeInput = str(row[4])
 		if row[5] == '':
 		    scannerModelInput = 'y'
 		else:
-		    scannerModelInput = row[5]
+		    scannerModelInput = str(row[5])
 		if row[8] == '':
 		    imageCompression = 'n'
 		else:
@@ -432,19 +432,19 @@ def gatherInput():
 		if row[8] == '':
 		  imageCompressionYearMonthDay = "0"
 		else:
-		  imageCompressionYearMonthDay = row[8]
+		  imageCompressionYearMonthDay = str(row[8])
 		if row[9] == '':
 		  imageCompressionTime = "0"
 		else:
-		  imageCompressionTime = row[9]
+		  imageCompressionTime = str(row[9])
 		if row[10] == '':
 		  compressionDST = "0"
 		else:
-		  compressionDST = row[10]
+		  compressionDST = str(row[10])
 		if row[11] == '':
 		  imageCompressionToolList = "0"
 		else:
-		  imageCompressionToolList = row[11]
+		  imageCompressionToolList = str(row[11])
 		writeFile(finalNumber, readingStartNum, readingEndNum, fileType, outputFile, romanCap, workingDir)
 
 gatherInput()
