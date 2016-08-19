@@ -256,6 +256,7 @@ def writeFile(finalNumber, readingStartNum, readingEndNum, fileType, outputFile,
 	global orderNum, multiworkEndList, romanEndList, romanInt
 	originalDir = os.getcwd()
 	os.chdir(workingDir)
+	outputFile = outputFile + '.yml'
 	f = open(outputFile, 'w')
 	scanningAndScannerInfo(f)
 	f.write('pagedata:\n')
@@ -292,7 +293,7 @@ def gatherInput():
 	hathi_csv = csv.reader(hathi_file)
 	for row in hathi_csv:
 		if row[0] == '':
-			outputFile = 0
+			outputFile = 'no_barcode'
 		else:
 			outputFile = row[0]
 		if row[1] == '':
