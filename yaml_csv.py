@@ -289,6 +289,7 @@ def writeFile(finalNumber, readingStartNum, readingEndNum, fileType, outputFile,
 def gatherInput():
 	global fileType, workingDir, finalNumber, readingStartNum, readingEndNum, frontCover, outputFile, backCover, blankPages, chapterPages, chapterStart, copyrightPages, firstChapterStart, foldoutPages, imagePages, indexStart, multiworkBoundaries, prefacePages, referenceStartPages, tableOfContentsStarts, titlePages, halfTitlePages, romanStart, romanCap, scanYearMonthDay, scanTime, DST, scannerModelInput, scannerMakeInput, bitoneResInput, contoneResInput, compressionDST, imageCompression, imageCompressionTime, imageCompressionTool, imageCompressionYearMonthDay, imageCompressionTime, imageCompressionAgent, imageCompressionToolList, scanningOrderInput, readingOrderInput, unpaginatedPages
 	pathToFile = raw_input("Provide a link to the CSV file: ")
+	workingDir = raw_input("Provide the directory in which the finished file should be placed: ")
 	hathi_file = open(pathToFile)
 	hathi_csv = csv.reader(hathi_file)
 	for row in hathi_csv:
@@ -297,119 +298,119 @@ def gatherInput():
 		else:
 			outputFile = row[0]
 		if row[1] == '':
-			scanYearMonthDay = 0
+		    scanYearMonthDay = "0"
 		else:
-			scanYearMonthDay = row[1]
+		    scanYearMonthDay = row[1]
 		if row[2] == '':
-			scanTime = 0
+		    scanTime = "0"
 		else:
-			scanTime = row[2]
+		    scanTime = row[2]
 		if row[3] == '':
-			DST = 0
+		    DST = "0"
 		else:
-			DST = row[3]
+		    DST = row[3]
 		if row[6] == '':
-			bitoneResInput = 0
+		    bitoneResInput = "0"
 		else:
-			bitoneResInput = row[6]
+		    bitoneResInput = row[6]
 		if row[7] == '':
-			contoneResInput = 0
+		    contoneResInput = "0"
 		else:
-			contoneResInput = row[7]
+		    contoneResInput = row[7]
 		if row[12] == '':
-			scanningOrderInput = 'Y'
+		    scanningOrderInput = 'Y'
 		else:
-			scanningOrderInput = row[12]
+		    scanningOrderInput = row[12]
 		if row[13] == '':
-			readingOrderInput = 'Y'
+		    readingOrderInput = 'Y'
 		else:
-			readingOrderInput = row[13]
+		    readingOrderInput = row[13]
 		if row[15] == '':
-			finalNumber = 0
+		    finalNumber = "0"
 		else:
-			finalNumber = row[15]
+		    finalNumber = row[15]
 		if row[16] == '':
-			frontCover = 0
+		    frontCover = "0"
 		else:
-			frontCover = row[16]
+		    frontCover = row[16]
 		if row[17] == '':
-			halfTitlePages = 0
+		    halfTitlePages = "0"
 		else:
-			halfTitlePages = row[17]
+		    halfTitlePages = row[17]
 		if row[18] == '':
-			titlePages = 0
+		    titlePages = "0"
 		else:
-			titlePages = row[18]
+		    titlePages = row[18]
 		if row[19] == '':
-			copyrightPages = 0
+		    copyrightPages = "0"
 		else:
-			copyrightPages = row[19]
+		    copyrightPages = row[19]
 		if row[20] == '':
-			tableOfContentsStarts = 0
+		    tableOfContentsStarts = "0"
 		else:
-			tableOfContentsStarts = row[20]
+		    tableOfContentsStarts = row[20]
 		if row[21] == '':
-			romanStart = 0
+		    romanStart = "0"
 		else:
-			romanStart = row[21]
+		    romanStart = row[21]
 		if row[22] == '':
-			romanCap = 0
+		    romanCap = "0"
 		else:
-			romanCap = row[22]
+		    romanCap = row[22]
 		if row[23] == '':
-			prefacePages = 0
+		    prefacePages = "0"
 		else:
-			prefacePages = row[23]
+		    prefacePages = row[23]
 		if row[24] == '':
-			readingStartNum = 0
+		    readingStartNum = "0"
 		else:
-			readingStartNum = row[24]
+		    readingStartNum = row[24]
 		if row[25] == '':
-			firstChapterStart = 0
+		    firstChapterStart = "0"
 		else:
-			firstChapterStart = row[25]
+		    firstChapterStart = row[25]
 		if row[26] == '':
-			chapterPages = 0
+		    chapterPages = "0"
 		else:
-			chapterPages = row[26]
+		    chapterPages = row[26]
 		if row[27] == '':
-			chapterStart = 0
+		    chapterStart = "0"
 		else:
-			chapterStart = row[27]
+		    chapterStart = row[27]
 		if row[28] == '':
-			readingEndNum = 0
+		    readingEndNum = "0"
 		else:
-			readingEndNum = row[28]
+		    readingEndNum = row[28]
 		if row[29] == '':
-			blankPages = 0
+		    blankPages = "0"
 		else:
-			blankPages = row[29]
+		    blankPages = row[29]
 		if row[30] == '':
-			unpaginatedPages = 0
+		    unpaginatedPages = "0"
 		else:
-			unpaginatedPages = row[30]
+		    unpaginatedPages = row[30]
 		if row[31] == '':
-			imagePages = 0
+		    imagePages = "0"
 		else:
-			imagePages = row[31]
+		    imagePages = row[31]
 		if row[32] == '':
-			foldoutPages = 0
+		    foldoutPages = "0"
 		else:
-			foldoutPages = row[32]
+		    foldoutPages = row[32]
 		if row[33] == '':
-			indexStart = 0
+		    indexStart = "0"
 		else:
-			indexStart = row[33]
+		    indexStart = row[33]
 		if row[34] == '':
-			referenceStartPages = 0
+		    referenceStartPages = "0"
 		else:
-			referenceStartPages = row[34]
+		    referenceStartPages = row[34]
 		if row[35] == '':
-			multiworkBoundaries = 0
+		    multiworkBoundaries = "0"
 		else:
-			multiworkBoundaries = row[35]
+		    multiworkBoundaries = row[35]
 		if row[36] == '':
-		    backCover = 0
+		    backCover = "0"
 		else:
 		    backCover = row[36]
 		if row[14] == '':
@@ -424,24 +425,24 @@ def gatherInput():
 		    scannerModelInput = 'y'
 		else:
 		    scannerModelInput = row[5]
-		if imageCompressionYearMonthDay = '':
+		if row[8] == '':
 		    imageCompression = 'n'
 		else:
 		    imageCompression = 'y'
 		if row[8] == '':
-		  imageCompressionYearMonthDay = 0
+		  imageCompressionYearMonthDay = "0"
 		else:
 		  imageCompressionYearMonthDay = row[8]
 		if row[9] == '':
-		  imageCompressionTime = 0
+		  imageCompressionTime = "0"
 		else:
 		  imageCompressionTime = row[9]
 		if row[10] == '':
-		  compressionDST = 0
+		  compressionDST = "0"
 		else:
 		  compressionDST = row[10]
 		if row[11] == '':
-		  imageCompressionToolList = 0
+		  imageCompressionToolList = "0"
 		else:
 		  imageCompressionToolList = row[11]
 		writeFile(finalNumber, readingStartNum, readingEndNum, fileType, outputFile, romanCap, workingDir)
