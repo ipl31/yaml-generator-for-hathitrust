@@ -20,6 +20,7 @@ Originally the spreadsheets were conceived of as CSVs, but when used in Excel or
 1. Clone repository to local machine. Python 2.7.x should be installed on the machine.
 2. Use (or copy) HathiTrust_Submission_YAML_Data_Spreadsheet.xls to record the data about your books. For information on how the data will be used, see field_guide.md, although it specifically addresses the "generator" script. Always use the IMAGE number, rather than the PAGE number as a value. Separate multiple numbers with a comma and space, e.g. "2, 63". Use ISO-8601 for dates and 24-hour HH:MM for hours/minutes.
 3. Save as CSV. Open in your preferred text editor to remove row 1 (headers) and ensure barcodes have saved properly.
+4. See **Personalizing** below to make any necessary edits (if you're not Notre Dame, at least a few hard-coded values must be replaced).
 4. Run `python yaml_csv.py` and input the directory path to your CSV file, followed by the directory path to the location where you would like outputs to appear. Be sure to escape any spaces in the directory paths.
 
 See SampleCSVData/SampleCSVData.csv for comparison and troubleshooting.
@@ -35,21 +36,21 @@ See SampleCSVData/SampleCSVData.csv for comparison and troubleshooting.
 7. Check the output YAML file to ensure it looks right and matches your input.
 8. Put in an Issue for any issues you encounter and I'll try to take them on. Additional features that aren't critical fixes or necessary for valid YAML files, however, will be added to possible phases later on. This includes refining multi-work issues.
 
-### Personalizing the YAML Generator to Your Repository
+## Personalizing the YAML Generator to Your Repository
 
 The YAML generator contains certain pieces of hard-coded information and some assumptions specific to the institution. This section includes line numbers in yaml_generator.py and yaml_csv.py ("gen" and "csv" respectively) which should be examined and possibly changed for your institution.
 
-#### Local Scanner Info
+### Local Scanner Info
 
 Lines (gen)303-304: Queries on each line reference "the Kirtas." Should be updated with name of in-house default scanner or a prompt to enter the Make (257) and Model (258) of the scanner.
 
 Lines (gen, csv)11-19: The tests using variables set in (257-258) to output information about the scanner. Should be redone with new default values or redone entirely to remove tests and take the scanner name entirely as input.
 
-#### Local Department Name
+### Local Department Name
 
 Lines (gen, csv)20-21: Scanner User is hard-coded as the name of the department which handles digitization. It should reflect the name of the department, unit, or other entity responsible for your institution's scanning.
 
-#### Local Compression Agent
+### Local Compression Agent
 
 Lines (gen, csv)31-32: Image Compression Agent is hard-coded. Change it to your institution's HathiTrust organization code (or that of the institution doing your image compression).
 
