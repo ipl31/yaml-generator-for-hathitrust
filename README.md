@@ -4,16 +4,27 @@ The HathiTrust submissions process requires a .yml file whose contents contain i
 
 ## Files Included
 
-- yaml_generator.py &mdash; Main python script.
+- yaml_csv.py &mdash; Takes CSV input and outputs multiple YAML files, each named for the barcode of the object.
+- yaml_generator.py &mdash; Python script for manually creating YAML files.
 - field_guide.md &mdash; an explanation of the fields and data requested.
-- HathiTrust_Submission_YAML_Data_Spreadsheet.xls &mdash; an XLS document with column headers for each piece of information required by the script. Can be used by student workers or others to record data before it's entered into the YAML generator. Ordering reflects the order in which information is requested by the script. Use field_guide.md to understand what each column represents and what it will output.
+- HathiTrust_Submission_YAML_Data_Spreadsheet.xls &mdash; an XLS document with column headers for each piece of information required by the script. Can be used by student workers or others to record data before it's entered into the YAML generator. Ordering is key. Use field_guide.md to understand what each column represents and what it will output.
 - HathiTrust_Submission_Sample.xls &mdash; a copy of the YAML Data Spreadsheet populated with a couple sets of values which can be used as sample information.
 - sample_meta.yml &mdash; a YAML file generated from the data entered in HathiTrust_Submission_Sample.xls. Example of how the data in each field gets handled.
 - sample_multiwork_meta.yml &mdash; a YAML file generated from data entered in the second line of HathiTrust_Submission_Sample.xls. Example of how multi-work issues get handled.
+- SampleCSVData/SampleCSVData.csv &mdash; A sample CSV which works with yaml_csv.py, may be used for comparison and troubleshooting.
 
-Originally the spreadsheets were conceived of as CSVs, but when used in Excel or Libre Office, one cannot save column data types for information and things like dates and barcodes were being "parsed" erroneously, leading to bad data. These allow persistent settings.
+Originally the spreadsheets were conceived of as CSVs, but when used in Excel or Libre Office, one cannot save column data types for information and things like dates and barcodes were being "parsed" erroneously, leading to bad data. These allow persistent settings. However, before using yaml_csv.py, be sure to save your work as an actual CSV. **Note, Excel often changes barcodes into other kinds of numbers, so after saving as a CSV, open in a text editor to ensure your barcodes look correct.**
 
-## Using the YAML Generator
+## Using YAML CSV Ingester
+
+1. Clone repository to local machine. Python 2.7.x should be installed on the machine.
+2. Use (or copy) HathiTrust_Submission_YAML_Data_Spreadsheet.xls to record the data about your books. For information on how the data will be used, see field_guide.md, although it specifically addresses the "generator" script. Always use the IMAGE number, rather than the PAGE number as a value. Separate multiple numbers with a comma and space, e.g. "2, 63". Use ISO-8601 for dates and 24-hour HH:MM for hours/minutes.
+3. Save as CSV. Open in your preferred text editor to remove row 1 (headers) and ensure barcodes have saved properly.
+4. Run `python yaml_csv.py` and input the directory path to your CSV file, followed by the directory path to the location where you would like outputs to appear. Be sure to escape any spaces in the directory paths.
+
+See SampleCSVData/SampleCSVData.csv for comparison and troubleshooting.
+
+## Using the Manual YAML Generator
 
 1. Clone repository to local machine. Python 2.7.x should be installed on the machine.
 2. Read field_guide.md and look over the CSV to understand the kind of data which the program will request.
@@ -26,21 +37,21 @@ Originally the spreadsheets were conceived of as CSVs, but when used in Excel or
 
 ### Personalizing the YAML Generator to Your Repository
 
-The YAML generator contains certain pieces of hard-coded information and some assumptions specific to the institution. This section includes line numbers in yaml_generator.py which should be examined and possibly changed for your institution.
+The YAML generator contains certain pieces of hard-coded information and some assumptions specific to the institution. This section includes line numbers in yaml_generator.py and yaml_csv.py ("gen" and "csv" respectively) which should be examined and possibly changed for your institution.
 
 #### Local Scanner Info
 
-Lines 303-304: Queries on each line reference "the Kirtas." Should be updated with name of in-house default scanner or a prompt to enter the Make (257) and Model (258) of the scanner.
+Lines (gen)303-304: Queries on each line reference "the Kirtas." Should be updated with name of in-house default scanner or a prompt to enter the Make (257) and Model (258) of the scanner.
 
-Lines 11-19: The tests using variables set in (257-258) to output information about the scanner. Should be redone with new default values or redone entirely to remove tests and take the scanner name entirely as input.
+Lines (gen, csv)11-19: The tests using variables set in (257-258) to output information about the scanner. Should be redone with new default values or redone entirely to remove tests and take the scanner name entirely as input.
 
 #### Local Department Name
 
-Lines 20-21: Scanner User is hard-coded as the name of the department which handles digitization. It should reflect the name of the department, unit, or other entity responsible for your institution's scanning.
+Lines (gen, csv)20-21: Scanner User is hard-coded as the name of the department which handles digitization. It should reflect the name of the department, unit, or other entity responsible for your institution's scanning.
 
 #### Local Compression Agent
 
-Lines 31-32: Image Compression Agent is hard-coded. Change it to your institution's HathiTrust organization code (or that of the institution doing your image compression).
+Lines (gen, csv)31-32: Image Compression Agent is hard-coded. Change it to your institution's HathiTrust organization code (or that of the institution doing your image compression).
 
 ## Overview of the Project
 
@@ -59,6 +70,7 @@ To allow one to input a small amount of information via the command line and gen
 - **Phase 9.** (Completed, 2016-03-15) Added support for creating the YAML file in any particular directory so it can be used better. Also adds success message saying where the file has been made.
 - **Phase 10.** (Completed, 2016-03-28) Now handles both regular and roman numerals for multi-work issues. Added sample multi-work YAML.
 - **Phase 11.** (Completed, 2016-03-29) Discovered bug in which ingests aren't cast to lists until after page 1, which is a problem because front/back cover are always INT but if there's a Page 1 or Page 1, it doesn't work. Moved inputToLists to writeFile itself. Found proper place to put it to avoid any other tests that might be interrupted.
+- **Phase 12.** (Completed, 2016-08-24) Takes input of CSV with as many pieces of book information as you want.
 
 ### Not in a phase yet
 
