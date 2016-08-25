@@ -96,36 +96,37 @@ def generateFileName(prefix, suffix, fileType):
 # Handles and incrementations for orderNum and romanInt
 def generateOrderLabel(fileNum):
 	global readingStartNum, readingEndNum, orderNum, orderLabel, romanCap, romanInt, romanStart
-	if fileNum == readingStartNum:
+	if fileNum == int(readingStartNum):
 		orderNum = 1
-	if fileNum == romanStart:
+	if fileNum == int(romanStart):
 		romanInt = 1
 	orderLabel = ''
-	if romanCap != 0:
-		if romanStart <= fileNum <= romanCap:
+	if int(romanCap) != 0:
+		if int(romanStart) <= fileNum <= int(romanCap):
 			orderLabel = 'orderlabel: "' + toRoman(romanInt) + '"'
 			romanInt += 1
-		elif romanCap < romanInt:
+		elif int(romanCap) < romanInt:
 			orderLabel = ''
-	if readingStartNum <= fileNum <= readingEndNum and fileNum not in unpaginatedPages:
+	if int(readingStartNum) <= fileNum <= int(readingEndNum) and fileNum not in unpaginatedPages:
 		orderLabel = 'orderlabel: "' + str(orderNum) + '"'
 		orderNum += 1
 
 # If this is a Multiwork item (note, does not function right if no multiwork boundary input), casts the numbers to start/end lists, then defines start/end numbers. Lots of globals because they'll need to be manipulated more elsewhere.
 def defineMultiWorkLists():
 	global readingStartNum, readingEndNum, multiworkStartList, multiworkEndList, romanStartList, romanEndList, romanStart, romanCap
-	multiworkStartList = list(readingStartNum)
-	multiworkEndList = list(readingEndNum)
+	multiworkStartList = map(int, readingStartNum.split(", "))
+	multiworkEndList = map(int, readingEndNum.split(", "))
 	readingStartNum = multiworkStartList[0]
 	readingEndNum = multiworkEndList[0]
-	if type(romanStart).__name__ != 'int':
-		romanStartList = list(romanStart)
-		romanEndList = list(romanCap)
+	if ", " in romanStart:
+		romanStartList = map(int, romanStart.split(", "))
+		romanEndList = map(int, romanCap.split(", "))
 		romanStart = romanStartList[0]
 		romanCap = romanEndList[0]
-	if type(romanStart).__name__ != 'int':
-		romanStart = romanStart
-		romanCap = romanCap
+#	if type(romanStart).__name__ != 'int':
+#		romanStart = romanStart
+#		romanCap = romanCap
+# This section seemed duplicative? But we'll see? The "if" clause is wrong for the CSV verion though...so would have to make sure that's fixed if actually deploying.
 
 # Handles Start/End lists, pops off the first (0) number in the list, then resets start/end numbers. Again using globals because they'll need to be manipulated elsewhere.
 def defineMultiworkCycle(fileNum):
@@ -176,38 +177,71 @@ def fromRoman(s):
 	return result
 
 # Processes inputs for various page numbers. Casts everything but covers, because there should only be one, into lists if they're not already lists. Could almost definitely be improved.
+# When coming from CSV, types are always now 'str'. So how
+
 def inputToLists():
 	global blankPages, chapterPages, chapterStart, copyrightPages, firstChapterStart, foldoutPages, imagePages, indexStart, multiworkBoundaries, prefacePages, referenceStartPages, tableOfContentsStarts, titlePages, halfTitlePages, unpaginatedPages
-	if type(blankPages).__name__ == 'int':
-		blankPages = [blankPages]
-	if type(chapterPages).__name__ == 'int':
-		chapterPages = [chapterPages]
-	if type(chapterStart).__name__ == 'int':
-		chapterStart = [chapterStart]
-	if type(copyrightPages).__name__ == 'int':
-		copyrightPages = [copyrightPages]
-	if type(firstChapterStart).__name__ == 'int':
-		firstChapterStart = [firstChapterStart]
-	if type(foldoutPages).__name__ == 'int':
-		foldoutPages = [foldoutPages]
-	if type(imagePages).__name__ == 'int':
-		imagePages = [imagePages]
-	if type(indexStart).__name__ == 'int':
-		indexStart = [indexStart]
-	if type(multiworkBoundaries).__name__ == 'int':
-		multiworkBoundaries = [multiworkBoundaries]
-	if type(prefacePages).__name__ == 'int':
-		prefacePages = [prefacePages]
-	if type(unpaginatedPages).__name__ == 'int':
-		unpaginatedPages = [unpaginatedPages]
-	if type(referenceStartPages).__name__ == 'int':
-		referenceStartPages = [referenceStartPages]
-	if type(tableOfContentsStarts).__name__ == 'int':
-		tableOfContentsStarts = [tableOfContentsStarts]
-	if type(titlePages).__name__ == 'int':
-		titlePages = [titlePages]
-	if type(halfTitlePages).__name__ == 'int':
-		halfTitlePages = [halfTitlePages]
+	if ", " in blankPages:
+		 blankPages = map(int, blankPages.split(", "))
+	else:
+		blankPages = [int(blankPages)]
+	if ", " in chapterPages:
+		 chapterPages = map(int, chapterPages.split(", "))
+	else:
+		chapterPages = [int(chapterPages)]
+	if ", " in chapterStart:
+		 chapterStart = map(int, chapterStart.split(", "))
+	else:
+		chapterStart = [int(chapterStart)]
+	if ", " in copyrightPages:
+		 copyrightPages = map(int, copyrightPages.split(", "))
+	else:
+		copyrightPages = [int(copyrightPages)]
+	if ", " in firstChapterStart:
+		 firstChapterStart = map(int, firstChapterStart.split(", "))
+	else:
+		firstChapterStart = [int(firstChapterStart)]
+	if ", " in foldoutPages:
+		 foldoutPages = map(int, foldoutPages.split(", "))
+	else:
+		foldoutPages = [int(foldoutPages)]
+	if ", " in imagePages:
+		 imagePages = map(int, imagePages.split(", "))
+	else:
+		imagePages = [int(imagePages)]
+	if ", " in indexStart:
+		 indexStart = map(int, indexStart.split(", "))
+	else:
+		indexStart = [int(indexStart)]
+	if ", " in multiworkBoundaries:
+		 multiworkBoundaries = map(int, multiworkBoundaries.split(", "))
+	else:
+		multiworkBoundaries = [int(multiworkBoundaries)]
+	if ", " in prefacePages:
+		 prefacePages = map(int, prefacePages.split(", "))
+	else:
+		prefacePages = [int(prefacePages)]
+	if ", " in unpaginatedPages:
+		 unpaginatedPages = map(int, unpaginatedPages.split(", "))
+	else:
+		unpaginatedPages = [int(unpaginatedPages)]
+	if ", " in referenceStartPages:
+		 referenceStartPages = map(int, referenceStartPages.split(", "))
+	else:
+		referenceStartPages = [int(referenceStartPages)]
+	if ", " in tableOfContentsStarts:
+		 tableOfContentsStarts = map(int, tableOfContentsStarts.split(", "))
+	else:
+		tableOfContentsStarts = [int(tableOfContentsStarts)]
+	if ", " in titlePages:
+		 titlePages = map(int, titlePages.split(", "))
+	else:
+		titlePages = [int(titlePages)]
+	if ", " in halfTitlePages:
+		 halfTitlePages = map(int, halfTitlePages.split(", "))
+	else:
+		halfTitlePages = [int(halfTitlePages)]
+
 
 # Handles the reading labels. Uses list function which then gets split apart, so that multiple labels can apply to same page if relevant.
 def generateLabel(fileNum):
@@ -252,8 +286,8 @@ def generateLabel(fileNum):
 		label = 'label: ' + ', '.join(labelList)
 
 # Combines all functions to write the file.
-def writeFile(finalNumber, readingStartNum, readingEndNum, fileType, outputFile, romanCap, workingDir):
-	global orderNum, multiworkEndList, romanEndList, romanInt
+def writeFile():
+	global finalNumber, readingStartNum, readingEndNum, fileType, outputFile, romanCap, workingDir, orderNum, multiworkEndList, romanEndList, romanInt
 	originalDir = os.getcwd()
 	os.chdir(workingDir)
 	outputFile = outputFile + '.yml'
@@ -326,13 +360,13 @@ def gatherInput():
 		else:
 		    readingOrderInput = row[13]
 		if row[15] == '':
-		    finalNumber = "0"
+		    finalNumber = 0
 		else:
-		    finalNumber = row[15]
+		    finalNumber = int(row[15])
 		if row[16] == '':
-		    frontCover = "0"
+		    frontCover = 0
 		else:
-		    frontCover = row[16]
+		    frontCover = int(row[16])
 		if row[17] == '':
 		    halfTitlePages = "0"
 		else:
@@ -410,9 +444,9 @@ def gatherInput():
 		else:
 		    multiworkBoundaries = row[35]
 		if row[36] == '':
-		    backCover = "0"
+		    backCover = 0
 		else:
-		    backCover = row[36]
+		    backCover = int(row[36])
 		if row[14] == '':
 		    fileType = 'tif'
 		else:
@@ -445,6 +479,6 @@ def gatherInput():
 		  imageCompressionToolList = "0"
 		else:
 		  imageCompressionToolList = row[11]
-		writeFile(finalNumber, readingStartNum, readingEndNum, fileType, outputFile, romanCap, workingDir)
+		writeFile()
 
 gatherInput()
