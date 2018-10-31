@@ -1,4 +1,5 @@
 # YAML Generator for Digitized HathiTrust Submissions
+# Whee!
 
 The HathiTrust submissions process requires a .yml file whose contents contain information about the scan and a detailed contents list. The contents list can include information about reading order, chapters, and page type. This Python (2.7.x) script allows one to generate a valid .yml file for *digitized* (not born-digital) materials. With some minor modifications it could work for born-digital materials too.
 
